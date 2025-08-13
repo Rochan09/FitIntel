@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - FitIntel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #2196F3;
+            --secondary-dark: #1976D2;
+            --light: #F5F5F5;
+            --dark: #222;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Enhanced Navbar */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--dark);
+            padding: 0.8rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+            color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item {
+            margin-left: 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--dark);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .nav-item.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        /* Hero Section */
+        .about-hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 8rem 0 6rem;
+            margin-top: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .about-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            animation: fadeInDown 1s ease;
+        }
+
+        .about-hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1s ease 0.5s forwards;
+            opacity: 0;
+            font-weight: 300;
+        }
+
+        /* About Content */
+        .about-section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            font-size: 2.5rem;
+            color: var(--dark);
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 5rem;
+        }
+
+        .about-text {
+            padding-right: 2rem;
+        }
+
+        .about-text h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .about-text p {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            height: 400px;
+            background: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b') center/cover no-repeat;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--gradient);
+            padding: 4rem 0;
+            color: white;
+            text-align: center;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Team Section */
+        .team {
+            padding: 5rem 0;
+            background: #f9f9f9;
+        }
+
+        .team-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .member-image {
+            height: 300px;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+        }
+
+        .member-info {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .member-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .member-role {
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .member-bio {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--gradient);
+            color: white;
+        }
+
+        /* Mission Section */
+        .mission {
+            padding: 5rem 0;
+        }
+
+        .mission-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .mission-statement {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 2rem;
+            font-style: italic;
+            position: relative;
+        }
+
+        .mission-statement::before,
+        .mission-statement::after {
+            content: '"';
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.3;
+            position: absolute;
+        }
+
+        .mission-statement::before {
+            top: -20px;
+            left: -30px;
+        }
+
+        .mission-statement::after {
+            bottom: -40px;
+            right: -30px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 0 0;
+            width: 100%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .footer-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-link {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-link a {
+            color: #bbb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-link a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-link i {
+            margin-right: 8px;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            margin-top: 1.5rem;
+            gap: 0.8rem;
+        }
+
+        .social-icon {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--gradient);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-image {
+                height: 300px;
+                order: -1;
+            }
+            
+            .about-text {
+                padding-right: 0;
+            }
+            
+            .mission-statement {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                padding: 1rem 0;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+            }
+            
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                margin: 0.3rem;
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
+            
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Enhanced Navbar -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>FitIntel</span>
+                </a>
+                <nav class="nav-menu">
+                    <a href="/" class="nav-item">Home</a>
+                    <a href="/food_recommendation" class="nav-item">Food</a>
+                    <a href="/exercise_recommendation" class="nav-item">Exercise</a>
+                    <a href="/about.html" class="nav-item active">About</a>
+                    <a href="#footer" class="nav-item">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="container">
+            <div class="about-hero-content">
+                <h1>Our Story & Vision</h1>
+                <p>Revolutionizing health and fitness through AI-powered personalized recommendations</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Who We Are</h2>
+                    <p>FitIntel was founded in 2023 with a mission to make personalized health and fitness guidance accessible to everyone. Our team of nutritionists, fitness experts, and AI specialists work together to create intelligent systems that adapt to your unique needs.</p>
+                    <p>We believe that one-size-fits-all approaches to health don't work. That's why we've developed sophisticated algorithms that consider your body type, health conditions, fitness level, and personal preferences to deliver recommendations that actually work for you.</p>
+                    <p>Our platform combines the latest research in nutrition science, exercise physiology, and machine learning to provide you with the most effective and sustainable path to better health.</p>
+                </div>
+                <div class="about-image"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Satisfaction Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Health Experts</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team">
+        <div class="container">
+            <h2 class="section-title">Meet Our Team</h2>
+            <div class="team-members">
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('https://images.unsplash.com/photo-1560250097-0b93528c311a')"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">Dr. Sarah Johnson</h3>
+                        <p class="member-role">Chief Nutritionist</p>
+                        <p class="member-bio">PhD in Nutritional Sciences with 15 years of clinical experience specializing in personalized diet plans.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d')"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">Mark Williams</h3>
+                        <p class="member-role">Head of Fitness</p>
+                        <p class="member-bio">Certified strength coach and former professional athlete with expertise in adaptive training programs.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2')"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">Priya Patel</h3>
+                        <p class="member-role">AI Lead</p>
+                        <p class="member-bio">Machine learning expert focused on developing algorithms that personalize health recommendations.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission">
+        <div class="container">
+            <div class="mission-content">
+                <h2 class="section-title">Our Mission</h2>
+                <p class="mission-statement">To empower individuals to take control of their health through personalized, data-driven recommendations that are accessible, effective, and sustainable for lifelong wellness.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3 class="footer-title">FitIntel</h3>
+                    <p style="color: #bbb; margin-bottom: 1rem; line-height: 1.6;">Your AI-powered health and fitness companion, delivering personalized recommendations to help you live your healthiest life.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="/"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li class="footer-link"><a href="/food_recommendation"><i class="fas fa-chevron-right"></i> Food Recommendation</a></li>
+                        <li class="footer-link"><a href="/exercise_recommendation"><i class="fas fa-chevron-right"></i> Exercise Recommendation</a></li>
+                        <li class="footer-link"><a href="/about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li class="footer-link"><a href="#footer"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#"><i class="fas fa-map-marker-alt"></i> 123 Wellness Blvd, Health City</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-phone"></i> +1 (555) 123-4567</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-envelope"></i> hello@fitintel.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FitIntel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set active nav item
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise Recommendations - FitIntel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #2196F3;
+            --secondary-dark: #1976D2;
+            --info: #29B6F6;
+            --light: #F5F5F5;
+            --dark: #222;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Enhanced Navbar */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--dark);
+            padding: 1rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+            color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        .nav-item {
+            margin-left: 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--dark);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .nav-item.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--dark);
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            font-size: 1.1rem;
+        }
+
+        /* Enhanced Cards */
+        .submodules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2.5rem;
+            padding: 0 1rem;
+        }
+
+        .submodule-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .submodule-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .submodule-img {
+            height: 250px;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+        }
+
+        .submodule-label {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 3;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .submodule-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
+            transition: all 0.4s ease;
+        }
+
+        .submodule-card:hover .submodule-overlay {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.6));
+        }
+
+        .weight-img { background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438'); }
+        .fitness-img { background-image: url("{{ url_for('static', filename='/fitness.jpg') }}"); }
+        .strength-img { background-image: url('https://images.unsplash.com/photo-1534258936925-c58bed479fc3'); }
+        .flexibility-img { background-image: url('https://images.unsplash.com/photo-1545205597-3d9d02c29597'); }
+
+        .submodule-content {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .submodule-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        .submodule-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+
+        .submodule-description {
+            color: #666;
+            font-size: 1.05rem;
+            margin: 1.5rem 0;
+            line-height: 1.7;
+        }
+
+        .submodule-features {
+            text-align: left;
+            margin: 1.5rem 0;
+            padding: 0 1rem;
+        }
+
+        .submodule-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .submodule-feature i {
+            margin-right: 10px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .submodule-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: var(--gradient);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            border: none;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .submodule-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 0 0;
+            width: 100%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .footer-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-link {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-link a {
+            color: #bbb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-link a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-link i {
+            margin-right: 8px;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            margin-top: 1.5rem;
+            gap: 0.8rem;
+        }
+
+        .social-icon {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--gradient);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                padding: 1rem 0;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+            }
+            
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                margin: 0.3rem;
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
+            
+            .submodules {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Enhanced Navbar -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>FitIntel</span>
+                </a>
+                <nav>
+                    <a href="/" class="nav-item active">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h2 class="section-title">Exercise Recommendations</h2>
+            <p class="section-subtitle">Discover personalized workout plans tailored to your fitness goals and abilities</p>
+            
+            <div class="submodules">
+                <!-- Weight Loss Card -->
+                <a href="/weight" class="submodule-card">
+                    <div class="submodule-img flexibility-img">
+                        <span class="submodule-label">Fat Burning</span>
+                        <div class="submodule-overlay"></div>
+                    </div>
+                    <div class="submodule-content">
+                        <h3 class="submodule-title">Weight Loss</h3>
+                        <p class="submodule-description">
+                            High-calorie burning workouts designed to help you shed pounds effectively and sustainably.
+                        </p>
+                        <div class="submodule-features">
+                            <div class="submodule-feature">
+                                <i class="fas fa-check-circle"></i> HIIT workouts
+                            </div>
+                            <div class="submodule-feature">
+                                <i class="fas fa-check-circle"></i> Cardio routines
+                            </div>
+                            <div class="submodule-feature">
+                                <i class="fas fa-check-circle"></i> Metabolic conditioning
+                            </div>
+                            <div class="submodule-feature">
+                                <i class="fas fa-check-circle"></i> Progress tracking
+                            </div>
+                        </div>
+                        <div class="submodule-btn">View Workouts</div>
+                    </div>
+                </a>
+
+                <!-- General Fitness Card -->
+                <a href="/fitness" class="submodule-card">
+                    <div class="submodule-img fitness-img">
+                        <span class="submodule-label">All-Around</span>
+                        <div class="submodule-overlay"></div>
+                    </div>
+                    <div class="submodule-content">
+                        <h3 class="submodule-title">General Fitness</h3>
+                        <p class="submodule-description">
+                            Balanced routines to improve cardiovascular health, strength, and overall wellbeing.
+                        </p>
+                        <div class="submodule-features">
+                            <div class="submodule-feature">
+                                <i class="fas fa-check-circle"></i> Full-body workouts
+                            </div>
+                            <div class="submodule-feature">
+                                <i class="fas fa-check-circle"></i> Beginner to advanced
+                            </div>
+                            <div class="submodule-feature">
+                                <i class="fas fa-check-circle"></i> Equipment optional
+                            </div>
+                            <div class="submodule-feature">
+                                <i class="fas fa-check-circle"></i> Time-efficient
+                            </div>
+                        </div>
+                        <div class="submodule-btn">View Workouts</div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3 class="footer-title">FitIntel</h3>
+                    <p style="color: #bbb; margin-bottom: 1rem; line-height: 1.6;">Your AI-powered fitness companion delivering personalized exercise recommendations for optimal results.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="/"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li class="footer-link"><a href="/food_recommendation"><i class="fas fa-chevron-right"></i> Food Recommendation</a></li>
+                        <li class="footer-link"><a href="/exercise_recommendation"><i class="fas fa-chevron-right"></i> Exercise Recommendation</a></li>
+                        <li class="footer-link"><a href="/about"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li class="footer-link"><a href="/contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#"><i class="fas fa-map-marker-alt"></i> 123 Fitness Ave, Health City</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-phone"></i> +1 (555) 123-4567</a></li>
+                        <li class="footer-link"><a href="#"><i class="fas fa-envelope"></i> support@fitintel.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FitIntel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set active nav item
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

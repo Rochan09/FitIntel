@@ -1,0 +1,151 @@
+2025-03-26 19:59:09,184 - INFO - numpy version: 1.26.4
+2025-03-26 19:59:09,184 - INFO - scikit-learn version: 1.5.2
+2025-03-26 19:59:09,184 - INFO - joblib version: 1.2.0
+2025-03-26 19:59:09,184 - INFO - Initial memory usage: 124.25 MB
+2025-03-26 19:59:09,193 - INFO - Available memory before loading breakfast_model_fever: 357.15 MB
+2025-03-26 19:59:10,766 - INFO - Successfully loaded breakfast_model_fever from models/breakfast_model_fever.pkl
+2025-03-26 19:59:10,767 - INFO - Memory usage after loading breakfast_model_fever: 285.12 MB
+2025-03-26 19:59:10,777 - INFO - Available memory before loading lunch_model_fever: 316.77 MB
+2025-03-26 19:59:11,727 - INFO - Successfully loaded lunch_model_fever from models/lunch_model_fever.pkl
+2025-03-26 19:59:11,728 - INFO - Memory usage after loading lunch_model_fever: 362.94 MB
+2025-03-26 19:59:11,738 - INFO - Available memory before loading dinner_model_fever: 347.10 MB
+2025-03-26 19:59:11,963 - INFO - Successfully loaded dinner_model_fever from models/dinner_model_fever.pkl
+2025-03-26 19:59:11,963 - INFO - Memory usage after loading dinner_model_fever: 429.45 MB
+2025-03-26 19:59:11,974 - INFO - Available memory before loading meal_encoders_fever: 370.41 MB
+2025-03-26 19:59:11,981 - INFO - Successfully loaded meal_encoders_fever from models/meal_encoders_fever.pkl
+2025-03-26 19:59:11,981 - INFO - Memory usage after loading meal_encoders_fever: 430.18 MB
+2025-03-26 19:59:11,992 - INFO - Available memory before loading gender_encoder_fever: 377.98 MB
+2025-03-26 19:59:11,993 - INFO - Successfully loaded gender_encoder_fever from models/gender_encoder_fever.pkl
+2025-03-26 19:59:11,993 - INFO - Memory usage after loading gender_encoder_fever: 430.18 MB
+2025-03-26 19:59:12,005 - INFO - Available memory before loading risk_model_heart: 384.07 MB
+2025-03-26 19:59:12,013 - INFO - Successfully loaded risk_model_heart from models/risk_model_heart.pkl
+2025-03-26 19:59:12,013 - INFO - Memory usage after loading risk_model_heart: 431.48 MB
+2025-03-26 19:59:12,024 - INFO - Available memory before loading scaler_heart: 392.57 MB
+2025-03-26 19:59:12,026 - INFO - Successfully loaded scaler_heart from models/scaler_heart.pkl
+2025-03-26 19:59:12,026 - INFO - Memory usage after loading scaler_heart: 431.51 MB
+2025-03-26 19:59:12,037 - INFO - Available memory before loading encoders_heart: 397.39 MB
+2025-03-26 19:59:12,038 - INFO - Successfully loaded encoders_heart from models/encoders_heart.pkl
+2025-03-26 19:59:12,038 - INFO - Memory usage after loading encoders_heart: 431.51 MB
+2025-03-26 19:59:12,048 - INFO - Available memory before loading meal_recommendations_heart: 401.96 MB
+2025-03-26 19:59:12,049 - INFO - Successfully loaded meal_recommendations_heart from models/meal_recommendations_heart.pkl
+2025-03-26 19:59:12,049 - INFO - Memory usage after loading meal_recommendations_heart: 431.51 MB
+2025-03-26 19:59:12,058 - INFO - Available memory before loading diabetes_food_breakfast_model.pkl: 405.25 MB
+2025-03-26 19:59:12,187 - INFO - Successfully loaded diabetes_food_breakfast_model.pkl from models\diabetes_food_breakfast_model.pkl
+2025-03-26 19:59:12,187 - INFO - Memory usage after loading diabetes_food_breakfast_model.pkl: 441.54 MB
+2025-03-26 19:59:12,196 - INFO - Available memory before loading diabetes_food_breakfast_vectorizer.pkl: 434.27 MB
+2025-03-26 19:59:12,717 - INFO - Successfully loaded diabetes_food_breakfast_vectorizer.pkl from models\diabetes_food_breakfast_vectorizer.pkl
+2025-03-26 19:59:12,717 - INFO - Memory usage after loading diabetes_food_breakfast_vectorizer.pkl: 442.43 MB
+2025-03-26 19:59:12,725 - INFO - Available memory before loading diabetes_food_lunch_model.pkl: 514.18 MB
+2025-03-26 19:59:12,818 - INFO - Successfully loaded diabetes_food_lunch_model.pkl from models\diabetes_food_lunch_model.pkl
+2025-03-26 19:59:12,818 - INFO - Memory usage after loading diabetes_food_lunch_model.pkl: 452.11 MB
+2025-03-26 19:59:12,826 - INFO - Available memory before loading diabetes_food_lunch_vectorizer.pkl: 507.65 MB
+2025-03-26 19:59:12,844 - INFO - Successfully loaded diabetes_food_lunch_vectorizer.pkl from models\diabetes_food_lunch_vectorizer.pkl
+2025-03-26 19:59:12,844 - INFO - Memory usage after loading diabetes_food_lunch_vectorizer.pkl: 452.77 MB
+2025-03-26 19:59:12,851 - INFO - Available memory before loading diabetes_food_dinner_model.pkl: 512.02 MB
+2025-03-26 19:59:13,008 - INFO - Successfully loaded diabetes_food_dinner_model.pkl from models\diabetes_food_dinner_model.pkl
+2025-03-26 19:59:13,008 - INFO - Memory usage after loading diabetes_food_dinner_model.pkl: 484.17 MB
+2025-03-26 19:59:13,017 - INFO - Available memory before loading diabetes_food_dinner_vectorizer.pkl: 481.10 MB
+2025-03-26 19:59:13,033 - INFO - Successfully loaded diabetes_food_dinner_vectorizer.pkl from models\diabetes_food_dinner_vectorizer.pkl
+2025-03-26 19:59:13,033 - INFO - Memory usage after loading diabetes_food_dinner_vectorizer.pkl: 484.84 MB
+2025-03-26 19:59:13,041 - INFO - Available memory before loading breakfast_model_diet: 481.69 MB
+2025-03-26 19:59:15,887 - INFO - Successfully loaded breakfast_model_diet from models/breakfast_model.pkl
+2025-03-26 19:59:15,892 - INFO - Memory usage after loading breakfast_model_diet: 242.93 MB
+2025-03-26 19:59:15,904 - INFO - Available memory before loading lunch_model_diet: 549.35 MB
+2025-03-26 19:59:18,834 - INFO - Successfully loaded lunch_model_diet from models/lunch_model.pkl
+2025-03-26 19:59:18,835 - INFO - Memory usage after loading lunch_model_diet: 238.22 MB
+2025-03-26 19:59:18,843 - INFO - Available memory before loading dinner_model_diet: 526.55 MB
+2025-03-26 19:59:23,877 - INFO - Successfully loaded dinner_model_diet from models/dinner_model.pkl
+2025-03-26 19:59:23,881 - INFO - Memory usage after loading dinner_model_diet: 59.36 MB
+2025-03-26 19:59:23,897 - INFO - Available memory before loading scaler_diet: 1115.52 MB
+2025-03-26 19:59:23,909 - INFO - Successfully loaded scaler_diet from models/scaler.pkl
+2025-03-26 19:59:23,909 - INFO - Memory usage after loading scaler_diet: 60.85 MB
+2025-03-26 19:59:23,918 - INFO - Available memory before loading le_gender_diet: 1113.43 MB
+2025-03-26 19:59:23,922 - INFO - Successfully loaded le_gender_diet from models/le_gender.pkl
+2025-03-26 19:59:23,922 - INFO - Memory usage after loading le_gender_diet: 60.92 MB
+2025-03-26 19:59:23,930 - INFO - Available memory before loading le_dietary_pref_diet: 1112.84 MB
+2025-03-26 19:59:23,932 - INFO - Successfully loaded le_dietary_pref_diet from models/le_dietary_pref.pkl
+2025-03-26 19:59:23,932 - INFO - Memory usage after loading le_dietary_pref_diet: 60.97 MB
+2025-03-26 19:59:23,940 - INFO - Available memory before loading le_weight_loss_plan_diet: 1114.87 MB
+2025-03-26 19:59:23,943 - INFO - Successfully loaded le_weight_loss_plan_diet from models/le_weight_loss_plan.pkl
+2025-03-26 19:59:23,944 - INFO - Memory usage after loading le_weight_loss_plan_diet: 61.02 MB
+2025-03-26 19:59:24,345 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.55.103:5000
+2025-03-26 19:59:24,345 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-26 19:59:24,397 - INFO -  * Restarting with watchdog (windowsapi)
+2025-03-26 19:59:29,236 - INFO - numpy version: 1.26.4
+2025-03-26 19:59:29,236 - INFO - scikit-learn version: 1.5.2
+2025-03-26 19:59:29,237 - INFO - joblib version: 1.2.0
+2025-03-26 19:59:29,237 - INFO - Initial memory usage: 123.92 MB
+2025-03-26 19:59:29,245 - INFO - Available memory before loading breakfast_model_fever: 1267.99 MB
+2025-03-26 19:59:31,526 - INFO - Successfully loaded breakfast_model_fever from models/breakfast_model_fever.pkl
+2025-03-26 19:59:31,526 - INFO - Memory usage after loading breakfast_model_fever: 442.47 MB
+2025-03-26 19:59:31,535 - INFO - Available memory before loading lunch_model_fever: 1851.86 MB
+2025-03-26 19:59:32,207 - INFO - Successfully loaded lunch_model_fever from models/lunch_model_fever.pkl
+2025-03-26 19:59:32,208 - INFO - Memory usage after loading lunch_model_fever: 677.55 MB
+2025-03-26 19:59:32,217 - INFO - Available memory before loading dinner_model_fever: 1756.73 MB
+2025-03-26 19:59:32,372 - INFO - Successfully loaded dinner_model_fever from models/dinner_model_fever.pkl
+2025-03-26 19:59:32,373 - INFO - Memory usage after loading dinner_model_fever: 744.61 MB
+2025-03-26 19:59:32,382 - INFO - Available memory before loading meal_encoders_fever: 1685.51 MB
+2025-03-26 19:59:32,384 - INFO - Successfully loaded meal_encoders_fever from models/meal_encoders_fever.pkl
+2025-03-26 19:59:32,384 - INFO - Memory usage after loading meal_encoders_fever: 745.46 MB
+2025-03-26 19:59:32,392 - INFO - Available memory before loading gender_encoder_fever: 1684.57 MB
+2025-03-26 19:59:32,393 - INFO - Successfully loaded gender_encoder_fever from models/gender_encoder_fever.pkl
+2025-03-26 19:59:32,394 - INFO - Memory usage after loading gender_encoder_fever: 745.46 MB
+2025-03-26 19:59:32,402 - INFO - Available memory before loading risk_model_heart: 1683.14 MB
+2025-03-26 19:59:32,408 - INFO - Successfully loaded risk_model_heart from models/risk_model_heart.pkl
+2025-03-26 19:59:32,409 - INFO - Memory usage after loading risk_model_heart: 746.72 MB
+2025-03-26 19:59:32,415 - INFO - Available memory before loading scaler_heart: 1684.81 MB
+2025-03-26 19:59:32,417 - INFO - Successfully loaded scaler_heart from models/scaler_heart.pkl
+2025-03-26 19:59:32,417 - INFO - Memory usage after loading scaler_heart: 746.72 MB
+2025-03-26 19:59:32,425 - INFO - Available memory before loading encoders_heart: 1684.92 MB
+2025-03-26 19:59:32,426 - INFO - Successfully loaded encoders_heart from models/encoders_heart.pkl
+2025-03-26 19:59:32,426 - INFO - Memory usage after loading encoders_heart: 746.72 MB
+2025-03-26 19:59:32,434 - INFO - Available memory before loading meal_recommendations_heart: 1684.72 MB
+2025-03-26 19:59:32,435 - INFO - Successfully loaded meal_recommendations_heart from models/meal_recommendations_heart.pkl
+2025-03-26 19:59:32,435 - INFO - Memory usage after loading meal_recommendations_heart: 746.72 MB
+2025-03-26 19:59:32,443 - INFO - Available memory before loading diabetes_food_breakfast_model.pkl: 1685.45 MB
+2025-03-26 19:59:32,507 - INFO - Successfully loaded diabetes_food_breakfast_model.pkl from models\diabetes_food_breakfast_model.pkl
+2025-03-26 19:59:32,508 - INFO - Memory usage after loading diabetes_food_breakfast_model.pkl: 756.76 MB
+2025-03-26 19:59:32,517 - INFO - Available memory before loading diabetes_food_breakfast_vectorizer.pkl: 1690.15 MB
+2025-03-26 19:59:32,541 - INFO - Successfully loaded diabetes_food_breakfast_vectorizer.pkl from models\diabetes_food_breakfast_vectorizer.pkl
+2025-03-26 19:59:32,541 - INFO - Memory usage after loading diabetes_food_breakfast_vectorizer.pkl: 756.96 MB
+2025-03-26 19:59:32,549 - INFO - Available memory before loading diabetes_food_lunch_model.pkl: 1699.18 MB
+2025-03-26 19:59:32,629 - INFO - Successfully loaded diabetes_food_lunch_model.pkl from models\diabetes_food_lunch_model.pkl
+2025-03-26 19:59:32,629 - INFO - Memory usage after loading diabetes_food_lunch_model.pkl: 766.20 MB
+2025-03-26 19:59:32,637 - INFO - Available memory before loading diabetes_food_lunch_vectorizer.pkl: 1695.70 MB
+2025-03-26 19:59:32,639 - INFO - Successfully loaded diabetes_food_lunch_vectorizer.pkl from models\diabetes_food_lunch_vectorizer.pkl
+2025-03-26 19:59:32,639 - INFO - Memory usage after loading diabetes_food_lunch_vectorizer.pkl: 766.87 MB
+2025-03-26 19:59:32,648 - INFO - Available memory before loading diabetes_food_dinner_model.pkl: 1697.45 MB
+2025-03-26 19:59:32,789 - INFO - Successfully loaded diabetes_food_dinner_model.pkl from models\diabetes_food_dinner_model.pkl
+2025-03-26 19:59:32,789 - INFO - Memory usage after loading diabetes_food_dinner_model.pkl: 798.17 MB
+2025-03-26 19:59:32,800 - INFO - Available memory before loading diabetes_food_dinner_vectorizer.pkl: 1671.21 MB
+2025-03-26 19:59:32,804 - INFO - Successfully loaded diabetes_food_dinner_vectorizer.pkl from models\diabetes_food_dinner_vectorizer.pkl
+2025-03-26 19:59:32,804 - INFO - Memory usage after loading diabetes_food_dinner_vectorizer.pkl: 798.84 MB
+2025-03-26 19:59:32,812 - INFO - Available memory before loading breakfast_model_diet: 1676.63 MB
+2025-03-26 19:59:33,093 - ERROR - Failed to load breakfast_model_diet from models/breakfast_model.pkl: Unable to allocate 6.16 MiB for an array with shape (807361,) and data type float64
+2025-03-26 19:59:33,153 - INFO - Available memory before loading lunch_model_diet: 1678.97 MB
+2025-03-26 19:59:34,007 - ERROR - Failed to load lunch_model_diet from models/lunch_model.pkl: Unable to allocate 6.16 MiB for an array with shape (807361,) and data type float64
+2025-03-26 19:59:34,046 - INFO - Available memory before loading dinner_model_diet: 1947.49 MB
+2025-03-26 19:59:34,473 - ERROR - Failed to load dinner_model_diet from models/dinner_model.pkl: could not allocate 6410264 bytes
+2025-03-26 19:59:34,507 - INFO - Available memory before loading scaler_diet: 1986.14 MB
+2025-03-26 19:59:34,510 - INFO - Successfully loaded scaler_diet from models/scaler.pkl
+2025-03-26 19:59:34,510 - INFO - Memory usage after loading scaler_diet: 804.39 MB
+2025-03-26 19:59:34,519 - INFO - Available memory before loading le_gender_diet: 1983.99 MB
+2025-03-26 19:59:34,520 - INFO - Successfully loaded le_gender_diet from models/le_gender.pkl
+2025-03-26 19:59:34,521 - INFO - Memory usage after loading le_gender_diet: 804.39 MB
+2025-03-26 19:59:34,530 - INFO - Available memory before loading le_dietary_pref_diet: 1981.64 MB
+2025-03-26 19:59:34,534 - INFO - Successfully loaded le_dietary_pref_diet from models/le_dietary_pref.pkl
+2025-03-26 19:59:34,534 - INFO - Memory usage after loading le_dietary_pref_diet: 804.39 MB
+2025-03-26 19:59:34,543 - INFO - Available memory before loading le_weight_loss_plan_diet: 1987.13 MB
+2025-03-26 19:59:34,545 - INFO - Successfully loaded le_weight_loss_plan_diet from models/le_weight_loss_plan.pkl
+2025-03-26 19:59:34,545 - INFO - Memory usage after loading le_weight_loss_plan_diet: 804.39 MB
+2025-03-26 19:59:34,580 - WARNING -  * Debugger is active!
+2025-03-26 19:59:34,601 - INFO -  * Debugger PIN: 113-810-044
+2025-03-26 20:00:13,095 - INFO - 127.0.0.1 - - [26/Mar/2025 20:00:13] "GET / HTTP/1.1" 200 -
+2025-03-26 20:00:22,278 - INFO - 127.0.0.1 - - [26/Mar/2025 20:00:22] "GET /heart HTTP/1.1" 200 -
+2025-03-26 20:00:51,599 - INFO - 127.0.0.1 - - [26/Mar/2025 20:00:51] "POST /predict_heart HTTP/1.1" 200 -
+2025-03-26 20:01:04,195 - INFO - 127.0.0.1 - - [26/Mar/2025 20:01:04] "GET /diet HTTP/1.1" 200 -
+2025-03-26 20:01:16,583 - WARNING - Diet models not loaded, using fallback
+2025-03-26 20:01:16,585 - INFO - 127.0.0.1 - - [26/Mar/2025 20:01:16] "POST /recommend_diet HTTP/1.1" 200 -
