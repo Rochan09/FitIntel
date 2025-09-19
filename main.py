@@ -81,8 +81,35 @@ def get_exercise_models():
     print("⚠️ Exercise recommendations are disabled. Only fever diet planner is active.")
     return {}, {}, []
 
+def load_compressed_model(model_name):
+    """Load model from compressed directory first, fallback to regular models"""
+    compressed_path = f'models_compressed/{model_name}'
+    regular_path = f'models/{model_name}'
+    
+    # Try compressed version first
+    if os.path.exists(compressed_path):
+        try:
+            model = joblib.load(compressed_path)
+            print(f"✅ Loaded compressed: {model_name}")
+            return model
+        except Exception as e:
+            print(f"⚠️ Failed to load compressed {model_name}: {e}")
+    
+    # Fallback to regular version
+    if os.path.exists(regular_path):
+        try:
+            model = joblib.load(regular_path)
+            print(f"✅ Loaded regular: {model_name}")
+            return model
+        except Exception as e:
+            print(f"❌ Failed to load {model_name}: {e}")
+            return None
+    
+    print(f"❌ Model not found: {model_name}")
+    return None
+
 def get_food_models(model_type=None):
-    """Lazy load food recommendation models by type - FEVER ONLY"""
+    """Lazy load food recommendation models by type - FEVER ONLY (COMPRESSED)"""
     global _food_models_cache
     
     # Only allow fever model type for this simplified version
@@ -93,17 +120,22 @@ def get_food_models(model_type=None):
     if model_type and model_type in _food_models_cache:
         return _food_models_cache[model_type]
     
-    print(f"Loading {model_type} food models on-demand...")
+    print(f"Loading {model_type} food models on-demand (COMPRESSED VERSION)...")
     
     if model_type == 'fever' and 'fever' not in _food_models_cache:
         _food_models_cache['fever'] = {}
         try:
-            _food_models_cache['fever']['breakfast_model'] = joblib.load('models/breakfast_model_fever.pkl')
-            _food_models_cache['fever']['lunch_model'] = joblib.load('models/lunch_model_fever.pkl')
-            _food_models_cache['fever']['dinner_model'] = joblib.load('models/dinner_model_fever.pkl')
-            _food_models_cache['fever']['meal_encoders'] = joblib.load('models/meal_encoders_fever.pkl')
-            _food_models_cache['fever']['gender_encoder'] = joblib.load('models/gender_encoder_fever.pkl')
-            print("✅ Loaded fever food models")
+            # Load compressed fever models
+            _food_models_cache['fever']['breakfast_model'] = load_compressed_model('breakfast_model_fever.pkl')
+            _food_models_cache['fever']['lunch_model'] = load_compressed_model('lunch_model_fever.pkl')
+            _food_models_cache['fever']['dinner_model'] = load_compressed_model('dinner_model_fever.pkl')
+            _food_models_cache['fever']['meal_encoders'] = load_compressed_model('meal_encoders_fever.pkl')
+            _food_models_cache['fever']['gender_encoder'] = load_compressed_model('gender_encoder_fever.pkl')
+            
+            # Verify all models loaded successfully
+            loaded_models = sum(1 for v in _food_models_cache['fever'].values() if v is not None)
+            print(f"✅ Loaded {loaded_models}/5 compressed fever food models")
+            
         except Exception as e:
             print(f"❌ Warning: Could not load fever food models: {e}")
     
@@ -116,8 +148,9 @@ def get_food_models(model_type=None):
 with app.app_context():
     # Try to create database tables with better error handling
     try:
-        # First, ensure we can connect to the database
-        db.engine.execute("SELECT 1")
+        # First, ensure we can connect to the database (SQLAlchemy 2.x compatible)
+        with db.engine.connect() as conn:
+            conn.execute(db.text("SELECT 1"))
         print("✅ Database connection successful")
         
         # Create all tables
@@ -138,8 +171,9 @@ with app.app_context():
         print(f"❌ Database initialization error: {e}")
         print("🔧 This might be due to database file permissions or connection issues")
     
-    print("🚀 FitIntel app starting - FEVER DIET PLANNER ONLY")
+    print("🚀 FitIntel app starting - FEVER DIET PLANNER ONLY (COMPRESSED MODELS)")
     print("🌡️ Only fever diet recommendations are active")
+    print("📦 Using compressed models (6.85MB total) for Render free tier")
     print("⚠️ Exercise, heart, diabetes, and general diet features are temporarily disabled")
 
 # ==================== Helper Functions ====================
@@ -254,9 +288,15 @@ def health_check():
         
         return jsonify({
             'status': 'healthy',
-            'mode': 'fever-diet-only',
+            'mode': 'fever-diet-only-compressed',
             'active_features': ['fever_diet_planner'],
             'disabled_features': ['exercise_recommendations', 'heart_diet', 'diabetes_diet', 'general_diet'],
+            'model_info': {
+                'total_compressed_size_mb': 6.85,
+                'compression_ratio': '98.9%',
+                'original_size_mb': 598.89,
+                'render_free_tier_compatible': True
+            },
             'database': 'connected',
             'user_count': user_count,
             'database_info': db_info,

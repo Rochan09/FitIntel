@@ -12,6 +12,11 @@ ENV/
 # Log files
 *.log
 
+# Unused ML models (preserved locally but not deployed)
+unused_models/
+unused_models/*.pkl
+unused_models/*.txt
+
 # Database files (but keep data directory structure)
 data/*.db
 data/*.sqlite

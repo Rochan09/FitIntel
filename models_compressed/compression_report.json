@@ -1,0 +1,40 @@
+{
+  "compression_results": {
+    "breakfast_model_fever.pkl": {
+      "original_size": 302.85688972473145,
+      "compressed_size": 2.9041976928710938,
+      "reduction_percent": 99.04106599803268,
+      "method": "joblib + gzip"
+    },
+    "lunch_model_fever.pkl": {
+      "original_size": 232.0117893218994,
+      "compressed_size": 2.66109561920166,
+      "reduction_percent": 98.8530343104636,
+      "method": "joblib + gzip"
+    },
+    "dinner_model_fever.pkl": {
+      "original_size": 63.91824531555176,
+      "compressed_size": 1.2734527587890625,
+      "reduction_percent": 98.007685047513,
+      "method": "joblib + gzip"
+    },
+    "meal_encoders_fever.pkl": {
+      "original_size": 0.10512065887451172,
+      "compressed_size": 0.010699272155761719,
+      "reduction_percent": 89.82191296143414,
+      "method": "joblib + gzip"
+    },
+    "gender_encoder_fever.pkl": {
+      "original_size": 0.0005168914794921875,
+      "compressed_size": 0.00034618377685546875,
+      "reduction_percent": 33.025830258302584,
+      "method": "joblib + gzip"
+    }
+  },
+  "summary": {
+    "total_original_mb": 598.8925619125366,
+    "total_compressed_mb": 6.849791526794434,
+    "total_reduction_percent": 98.85625703800362,
+    "fits_in_512mb": true
+  }
+}
