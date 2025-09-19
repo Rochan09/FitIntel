@@ -12,5 +12,8 @@ itsdangerous==2.1.2
 click==8.1.7
 flask-bcrypt==1.0.1
 flask-sqlalchemy==3.0.5
+flask-wtf==1.1.1
+wtforms==3.0.1
 psycopg2-binary==2.9.7
 setuptools==68.2.2
+email-validator==2.0.0
