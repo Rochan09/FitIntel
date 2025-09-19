@@ -1,3 +1,11 @@
+import os
+import warnings
+import numpy as np
+import pandas as pd
+import pickle
+import joblib
+import random
+import gc
 from flask import Flask, render_template, flash, redirect, url_for, session, request, jsonify
 from forms import RegisterForm, LoginForm
 from models import db, User
@@ -46,130 +54,138 @@ def login_required(f):
     return decorated_function
 
 # ==================== Model Loading Functions ====================
-def load_exercise_models():
-    """Load exercise recommendation models"""
-    print("Loading exercise models...")
-    
-    models = {}
-    for i in range(1, 4):
-        model_path = f'models/model_Exercise_{i}.pkl'
-        if os.path.exists(model_path):
-            try:
-                models[f'Exercise_{i}'] = joblib.load(model_path)
-                print(f"✅ Loaded {model_path}")
-            except Exception as e:
-                print(f"❌ Warning: Could not load model {model_path}. Error: {e}")
+# Global model caches for lazy loading
+_exercise_models_cache = None
+_exercise_models1_cache = None
+_unique_exercises_cache = None
+_food_models_cache = {}
 
-    models1 = {}
-    for i in range(1, 4):
-        model_path = f'models/model1_Exercise_{i}.pkl'
-        if os.path.exists(model_path):
-            try:
-                models1[f'Exercise_{i}'] = joblib.load(model_path)
-                print(f"✅ Loaded {model_path}")
-            except Exception as e:
-                print(f"❌ Warning: Could not load model {model_path}. Error: {e}")
+def get_exercise_models():
+    """Lazy load exercise recommendation models"""
+    global _exercise_models_cache, _exercise_models1_cache, _unique_exercises_cache
     
-    unique_exercises = []
-    file_path = 'models/unique_exercises.txt'
-    if os.path.exists(file_path):
-        try:
-            with open(file_path, 'r') as f:
-                unique_exercises = [line.strip() for line in f.readlines()]
-            print(f"✅ Loaded {len(unique_exercises)} unique exercises")
-        except Exception as e:
-            print(f"❌ Warning: Could not load unique exercises: {e}")
-    
-    print(f"Loaded {len(models)} exercise models from first set")
-    print(f"Loaded {len(models1)} exercise models from second set")
-    
-    return models, models1, unique_exercises
-
-def load_food_models():
-    """Load food recommendation models"""
-    print("Loading food models...")
-    
-    food_models = {
-        'fever': {},
-        'heart': {},
-        'diabetes': {},
-        'diet': {}
-    }
-    
-    try:
-        food_models['fever']['breakfast_model'] = joblib.load('models/breakfast_model_fever.pkl')
-        food_models['fever']['lunch_model'] = joblib.load('models/lunch_model_fever.pkl')
-        food_models['fever']['dinner_model'] = joblib.load('models/dinner_model_fever.pkl')
-        food_models['fever']['meal_encoders'] = joblib.load('models/meal_encoders_fever.pkl')
-        food_models['fever']['gender_encoder'] = joblib.load('models/gender_encoder_fever.pkl')
-        print("Loaded fever food models")
-    except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) as e:
-        print(f"Warning: Could not load fever food models. This may be due to a version mismatch, a corrupted model file, or a memory allocation issue. Error: {e}")
-    
-    try:
-        with open('models/risk_model_heart.pkl', 'rb') as f:
-            food_models['heart']['risk_model'] = pickle.load(f)
-        with open('models/scaler_heart.pkl', 'rb') as f:
-            food_models['heart']['scaler'] = pickle.load(f)
-        with open('models/encoders_heart.pkl', 'rb') as f:
-            food_models['heart']['encoders'] = pickle.load(f)
-        with open('models/meal_recommendations_heart.pkl', 'rb') as f:
-            food_models['heart']['meal_recommendations'] = pickle.load(f)
-        print("Loaded heart food models")
-    except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) as e:
-        print(f"Warning: Could not load heart food models. This may be due to a version mismatch, a corrupted model file, or a memory allocation issue. Error: {e}")
-    
-    try:
-        food_models['diabetes']['breakfast_model'] = joblib.load('models/diabetes_food_breakfast_model.pkl')
-        food_models['diabetes']['lunch_model'] = joblib.load('models/diabetes_food_lunch_model.pkl')
-        food_models['diabetes']['dinner_model'] = joblib.load('models/diabetes_food_dinner_model.pkl')
-        food_models['diabetes']['breakfast_vectorizer'] = joblib.load('models/diabetes_food_breakfast_vectorizer.pkl')
-        food_models['diabetes']['lunch_vectorizer'] = joblib.load('models/diabetes_food_lunch_vectorizer.pkl')
-        food_models['diabetes']['dinner_vectorizer'] = joblib.load('models/diabetes_food_dinner_vectorizer.pkl')
-        print("Loaded diabetes food models")
-    except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) as e:
-        print(f"Warning: Could not load diabetes food models. This may be due to a version mismatch, a corrupted model file, or a memory allocation issue. Error: {e}")
-    
-    try:
-        # TODO: Temporarily disabled for deployment - large models (620MB each)
-        # food_models['diet']['breakfast_model'] = joblib.load('models/breakfast_model.pkl')
-        # food_models['diet']['lunch_model'] = joblib.load('models/lunch_model.pkl')
-        # food_models['diet']['dinner_model'] = joblib.load('models/dinner_model.pkl')
+    if _exercise_models_cache is None or _exercise_models1_cache is None:
+        print("Loading exercise models on-demand...")
         
-        # Load smaller models only
-        food_models['diet']['scaler'] = joblib.load('models/scaler.pkl')
-        food_models['diet']['le_gender'] = joblib.load('models/le_gender.pkl')
-        food_models['diet']['le_dietary_pref'] = joblib.load('models/le_dietary_pref.pkl')
-        food_models['diet']['le_weight_loss_plan'] = joblib.load('models/le_weight_loss_plan.pkl')
-        print("Loaded diet food models (without large models for deployment)")
-    except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) as e:
-        print(f"Warning: Could not load diet food models. This may be due to a version mismatch, a corrupted model file, or a memory allocation issue. Error: {e}")
+        models = {}
+        for i in range(1, 4):
+            model_path = f'models/model_Exercise_{i}.pkl'
+            if os.path.exists(model_path):
+                try:
+                    models[f'Exercise_{i}'] = joblib.load(model_path)
+                    print(f"✅ Loaded {model_path}")
+                except Exception as e:
+                    print(f"❌ Warning: Could not load model {model_path}. Error: {e}")
+
+        models1 = {}
+        for i in range(1, 4):
+            model_path = f'models/model1_Exercise_{i}.pkl'
+            if os.path.exists(model_path):
+                try:
+                    models1[f'Exercise_{i}'] = joblib.load(model_path)
+                    print(f"✅ Loaded {model_path}")
+                except Exception as e:
+                    print(f"❌ Warning: Could not load model {model_path}. Error: {e}")
+        
+        unique_exercises = []
+        file_path = 'models/unique_exercises.txt'
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, 'r') as f:
+                    unique_exercises = [line.strip() for line in f.readlines()]
+                print(f"✅ Loaded {len(unique_exercises)} unique exercises")
+            except Exception as e:
+                print(f"❌ Warning: Could not load unique exercises: {e}")
+        
+        _exercise_models_cache = models
+        _exercise_models1_cache = models1
+        _unique_exercises_cache = unique_exercises
+        
+        # Clean up memory after loading
+        gc.collect()
+        
+        print(f"Loaded {len(models)} exercise models from first set")
+        print(f"Loaded {len(models1)} exercise models from second set")
     
-    return food_models
+    return _exercise_models_cache, _exercise_models1_cache, _unique_exercises_cache
+
+def get_food_models(model_type=None):
+    """Lazy load food recommendation models by type"""
+    global _food_models_cache
+    
+    if model_type and model_type in _food_models_cache:
+        return _food_models_cache[model_type]
+    
+    print(f"Loading {model_type or 'all'} food models on-demand...")
+    
+    if model_type == 'fever' and 'fever' not in _food_models_cache:
+        _food_models_cache['fever'] = {}
+        try:
+            _food_models_cache['fever']['breakfast_model'] = joblib.load('models/breakfast_model_fever.pkl')
+            _food_models_cache['fever']['lunch_model'] = joblib.load('models/lunch_model_fever.pkl')
+            _food_models_cache['fever']['dinner_model'] = joblib.load('models/dinner_model_fever.pkl')
+            _food_models_cache['fever']['meal_encoders'] = joblib.load('models/meal_encoders_fever.pkl')
+            _food_models_cache['fever']['gender_encoder'] = joblib.load('models/gender_encoder_fever.pkl')
+            print("✅ Loaded fever food models")
+        except Exception as e:
+            print(f"❌ Warning: Could not load fever food models: {e}")
+    
+    elif model_type == 'heart' and 'heart' not in _food_models_cache:
+        _food_models_cache['heart'] = {}
+        try:
+            with open('models/risk_model_heart.pkl', 'rb') as f:
+                _food_models_cache['heart']['risk_model'] = pickle.load(f)
+            with open('models/scaler_heart.pkl', 'rb') as f:
+                _food_models_cache['heart']['scaler'] = pickle.load(f)
+            with open('models/encoders_heart.pkl', 'rb') as f:
+                _food_models_cache['heart']['encoders'] = pickle.load(f)
+            with open('models/meal_recommendations_heart.pkl', 'rb') as f:
+                _food_models_cache['heart']['meal_recommendations'] = pickle.load(f)
+            print("✅ Loaded heart food models")
+        except Exception as e:
+            print(f"❌ Warning: Could not load heart food models: {e}")
+    
+    elif model_type == 'diabetes' and 'diabetes' not in _food_models_cache:
+        _food_models_cache['diabetes'] = {}
+        try:
+            _food_models_cache['diabetes']['breakfast_model'] = joblib.load('models/diabetes_food_breakfast_model.pkl')
+            _food_models_cache['diabetes']['lunch_model'] = joblib.load('models/diabetes_food_lunch_model.pkl')
+            _food_models_cache['diabetes']['dinner_model'] = joblib.load('models/diabetes_food_dinner_model.pkl')
+            _food_models_cache['diabetes']['breakfast_vectorizer'] = joblib.load('models/diabetes_food_breakfast_vectorizer.pkl')
+            _food_models_cache['diabetes']['lunch_vectorizer'] = joblib.load('models/diabetes_food_lunch_vectorizer.pkl')
+            _food_models_cache['diabetes']['dinner_vectorizer'] = joblib.load('models/diabetes_food_dinner_vectorizer.pkl')
+            print("✅ Loaded diabetes food models")
+        except Exception as e:
+            print(f"❌ Warning: Could not load diabetes food models: {e}")
+    
+    elif model_type == 'diet' and 'diet' not in _food_models_cache:
+        _food_models_cache['diet'] = {}
+        try:
+            # Only load smaller models to save memory
+            _food_models_cache['diet']['scaler'] = joblib.load('models/scaler.pkl')
+            _food_models_cache['diet']['le_gender'] = joblib.load('models/le_gender.pkl')
+            _food_models_cache['diet']['le_dietary_pref'] = joblib.load('models/le_dietary_pref.pkl')
+            _food_models_cache['diet']['le_weight_loss_plan'] = joblib.load('models/le_weight_loss_plan.pkl')
+            print("✅ Loaded diet food models (encoders only for memory efficiency)")
+        except Exception as e:
+            print(f"❌ Warning: Could not load diet food models: {e}")
+    
+    # Clean up memory after model loading
+    gc.collect()
+    
+    return _food_models_cache.get(model_type, {})
 
 # Load all models at startup
 with app.app_context():
     # Try to create database tables
     try:
         db.create_all()
-        print("Database tables created successfully")
+        print("✅ Database tables created successfully")
     except Exception as e:
-        print(f"Warning: Could not create database tables: {e}")
+        print(f"❌ Warning: Could not create database tables: {e}")
     
-    # Load models with error handling
-    try:
-        exercise_models, exercise_models1, unique_exercises = load_exercise_models()
-        print("Exercise models loaded successfully")
-    except Exception as e:
-        print(f"Warning: Could not load exercise models: {e}")
-        exercise_models, exercise_models1, unique_exercises = {}, {}, []
-    
-    try:
-        food_models = load_food_models()
-        print("Food models loaded successfully")
-    except Exception as e:
-        print(f"Warning: Could not load food models: {e}")
-        food_models = {'fever': {}, 'heart': {}, 'diabetes': {}, 'diet': {}}
+    print("🚀 FitIntel app starting with lazy model loading for memory efficiency")
+    print("📊 Models will be loaded on-demand when needed for predictions")
 
 # ==================== Helper Functions ====================
 def get_bmi_category(bmi):
@@ -254,12 +270,13 @@ def predict_food_recommendations(age, weight, gender, fasting_blood_sugar, hba1c
     })
     
     try:
-        breakfast_model = food_models['diabetes']['breakfast_model']
-        breakfast_vectorizer = food_models['diabetes']['breakfast_vectorizer']
-        lunch_model = food_models['diabetes']['lunch_model']
-        lunch_vectorizer = food_models['diabetes']['lunch_vectorizer']
-        dinner_model = food_models['diabetes']['dinner_model']
-        dinner_vectorizer = food_models['diabetes']['dinner_vectorizer']
+        diabetes_models = get_food_models('diabetes')
+        breakfast_model = diabetes_models['breakfast_model']
+        breakfast_vectorizer = diabetes_models['breakfast_vectorizer']
+        lunch_model = diabetes_models['lunch_model']
+        lunch_vectorizer = diabetes_models['lunch_vectorizer']
+        dinner_model = diabetes_models['dinner_model']
+        dinner_vectorizer = diabetes_models['dinner_vectorizer']
         
         breakfast_categories = breakfast_model.predict(new_sample)[0]
         lunch_categories = lunch_model.predict(new_sample)[0]
@@ -385,6 +402,9 @@ def predict1():
             'Intensity_Preference': [intensity_preference]
         })
         
+        # Load exercise models on demand
+        exercise_models, exercise_models1, unique_exercises = get_exercise_models()
+        
         recommended_exercises = []
         for i in range(1, 4):
             if f'Exercise_{i}' in exercise_models:
@@ -451,6 +471,9 @@ def predict():
             'Target_Body_Areas': [target_areas_str]
         })
         
+        # Load exercise models on demand
+        exercise_models, exercise_models1, unique_exercises = get_exercise_models()
+        
         recommended_exercises = []
         for i in range(1, 4):
             if f'Exercise_{i}' in exercise_models1:
@@ -516,7 +539,8 @@ def fever_home():
 @app.route('/predict_fever', methods=['POST'])
 @login_required
 def predict_fever():
-    if 'fever' not in food_models or not all(key in food_models['fever'] for key in ['breakfast_model', 'lunch_model', 'dinner_model']):
+    fever_models = get_food_models('fever')
+    if not fever_models or not all(key in fever_models for key in ['breakfast_model', 'lunch_model', 'dinner_model']):
         return jsonify({'error': 'Fever models not loaded'}), 500
     
     data = request.form
@@ -532,15 +556,15 @@ def predict_fever():
         'fever_level': [fever_level]
     })
 
-    input_data['gender'] = food_models['fever']['gender_encoder'].transform(input_data['gender'])
+    input_data['gender'] = fever_models['gender_encoder'].transform(input_data['gender'])
 
-    breakfast_pred = food_models['fever']['breakfast_model'].predict(input_data)[0]
-    lunch_pred = food_models['fever']['lunch_model'].predict(input_data)[0]
-    dinner_pred = food_models['fever']['dinner_model'].predict(input_data)[0]
+    breakfast_pred = fever_models['breakfast_model'].predict(input_data)[0]
+    lunch_pred = fever_models['lunch_model'].predict(input_data)[0]
+    dinner_pred = fever_models['dinner_model'].predict(input_data)[0]
 
-    breakfast_rec = food_models['fever']['meal_encoders']['breakfast'].inverse_transform([breakfast_pred])[0]
-    lunch_rec = food_models['fever']['meal_encoders']['lunch'].inverse_transform([lunch_pred])[0]
-    dinner_rec = food_models['fever']['meal_encoders']['dinner'].inverse_transform([dinner_pred])[0]
+    breakfast_rec = fever_models['meal_encoders']['breakfast'].inverse_transform([breakfast_pred])[0]
+    lunch_rec = fever_models['meal_encoders']['lunch'].inverse_transform([lunch_pred])[0]
+    dinner_rec = fever_models['meal_encoders']['dinner'].inverse_transform([dinner_pred])[0]
 
     return jsonify({
         'breakfast': breakfast_rec,
@@ -556,7 +580,8 @@ def heart_home():
 @app.route('/predict_heart', methods=['POST'])
 @login_required
 def predict_heart():
-    if 'heart' not in food_models or not all(key in food_models['heart'] for key in ['risk_model', 'scaler', 'encoders']):
+    heart_models = get_food_models('heart')
+    if not heart_models or not all(key in heart_models for key in ['risk_model', 'scaler', 'encoders']):
         return jsonify({'error': 'Heart models not loaded'}), 500
     
     age = int(request.form['age'])
@@ -567,14 +592,14 @@ def predict_heart():
     bp_diastolic = int(request.form['bp_diastolic'])
     obesity = request.form['obesity']
     
-    gender_encoded = food_models['heart']['encoders']['gender'].transform([gender])[0]
-    obesity_encoded = food_models['heart']['encoders']['obesity'].transform([obesity])[0]
+    gender_encoded = heart_models['encoders']['gender'].transform([gender])[0]
+    obesity_encoded = heart_models['encoders']['obesity'].transform([obesity])[0]
     
     input_data = np.array([[age, weight, gender_encoded, cholesterol, bp_systolic, bp_diastolic, obesity_encoded]])
-    input_data_scaled = food_models['heart']['scaler'].transform(input_data)
-    risk_category = food_models['heart']['risk_model'].predict(input_data_scaled)[0]
+    input_data_scaled = heart_models['scaler'].transform(input_data)
+    risk_category = heart_models['risk_model'].predict(input_data_scaled)[0]
     
-    category_recommendations = food_models['heart']['meal_recommendations'][risk_category]
+    category_recommendations = heart_models['meal_recommendations'][risk_category]
     breakfast_options = random.choice(category_recommendations['breakfast'])
     lunch_options = random.choice(category_recommendations['lunch'])
     dinner_options = random.choice(category_recommendations['dinner'])
@@ -643,16 +668,19 @@ def recommend_diet():
     # Once deployed, these can be moved to external storage (Google Drive/S3) and loaded at runtime
     
     try:
-        gender_encoded = food_models['diet']['le_gender'].transform([gender])[0]
-        dietary_pref_encoded = food_models['diet']['le_dietary_pref'].transform([dietary_preference])[0]
-        weight_loss_plan_encoded = food_models['diet']['le_weight_loss_plan'].transform([weight_loss_plan])[0]
+        # Load diet models on demand
+        diet_models = get_food_models('diet')
+        
+        gender_encoded = diet_models['le_gender'].transform([gender])[0]
+        dietary_pref_encoded = diet_models['le_dietary_pref'].transform([dietary_preference])[0]
+        weight_loss_plan_encoded = diet_models['le_weight_loss_plan'].transform([weight_loss_plan])[0]
 
         input_features = np.array([
             age, height, weight, gender_encoded, 
             dietary_pref_encoded, weight_loss_plan_encoded, meals_per_day
         ]).reshape(1, -1)
 
-        input_scaled = food_models['diet']['scaler'].transform(input_features)
+        input_scaled = diet_models['scaler'].transform(input_features)
 
         # Temporarily return sample recommendations instead of using large models
         # breakfast_pred = food_models['diet']['breakfast_model'].predict(input_scaled)[0]
