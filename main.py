@@ -21,8 +21,8 @@ if database_url:
     # Production database (Render will provide this)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
-    # Development database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:rochan@localhost:5432/flask_auth_db'
+    # Use SQLite for deployment/development when PostgreSQL is not available
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fitintel.db'
 
 # Initialize extensions
 bcrypt = Bcrypt(app)
@@ -144,7 +144,13 @@ def load_food_models():
 
 # Load all models at startup
 with app.app_context():
-    db.create_all()
+    # Try to create database tables
+    try:
+        db.create_all()
+        print("Database tables created successfully")
+    except Exception as e:
+        print(f"Warning: Could not create database tables: {e}")
+    
     exercise_models, exercise_models1, unique_exercises = load_exercise_models()
     food_models = load_food_models()
 
