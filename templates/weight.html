@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight Loss Exercise Recommendations - FitIntel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #2196F3;
+            --secondary-dark: #1976D2;
+            --warning: #FFA726;
+            --light: #F5F5F5;
+            --dark: #333;
+            --accent: #FF5722;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e8f5e9, #bbdefb);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1 0 auto;
+            padding-top: 70px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 15px;
+            font-size: 3rem;
+            animation: pulse 2s infinite;
+        }
+
+        .nav-item {
+            margin-left: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.4s ease;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Enhanced Form Styles */
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .form-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .form-section legend {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .form-range {
+            accent-color: var(--primary);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Enhanced Result Styles */
+        .result-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .exercise-card {
+            background: linear-gradient(135deg, #f8f9fa, #e8f5e9);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: scale(1.02);
+        }
+
+        .exercise-card h5 {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .exercise-card p {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .loading {
+            text-align: center;
+            display: none;
+            padding: 20px;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.4em;
+        }
+
+        .health-conditions-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .health-condition-item {
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: background 0.3s ease;
+        }
+
+        .health-condition-item:hover {
+            background: #f0f0f0;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            flex-shrink: 0;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-link {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-link a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #555;
+        }
+
+        .social-icons {
+            display: flex;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .form-section {
+                padding: 15px;
+            }
+            .health-conditions-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h1 class="section-title">Weight Loss Exercise Recommendations</h1>
+                <p class="text-muted lead">Get personalized workout plans designed to help you achieve your weight loss goals.</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="form-container">
+                        <form id="exerciseForm">
+                            <!-- Personal Info Section -->
+                            <div class="form-section">
+                                <legend><i class="fas fa-user me-2"></i>Personal Information</legend>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="age" class="form-label">Age</label>
+                                        <input type="number" class="form-control" id="age" name="age" min="18" max="90" placeholder="e.g., 25" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <select class="form-select" id="gender" name="gender" required>
+                                            <option value="" selected disabled>Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="weight" class="form-label">Current Weight (kg)</label>
+                                        <input type="number" step="0.1" class="form-control" id="weight" name="weight" min="30" max="200" placeholder="e.g., 70.5" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="height" class="form-label">Height (cm)</label>
+                                        <input type="number" step="0.1" class="form-control" id="height" name="height" min="100" max="250" placeholder="e.g., 170" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="weight_loss_goal" class="form-label">Weight Loss Goal (kg)</label>
+                                    <input type="number" step="0.1" class="form-control" id="weight_loss_goal" name="weight_loss_goal" min="1" max="50" placeholder="e.g., 10" required>
+                                </div>
+                            </div>
+
+                            <!-- Fitness Details Section -->
+                            <div class="form-section">
+                                <legend><i class="fas fa-dumbbell me-2"></i>Fitness Details</legend>
+                                <div class="mb-3">
+                                    <label for="fitness_level" class="form-label">Fitness Level (1-10)</label>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <small>Beginner</small>
+                                        <small>Intermediate</small>
+                                        <small>Advanced</small>
+                                    </div>
+                                    <input type="range" class="form-range" id="fitness_level" name="fitness_level" min="1" max="10" value="5">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Health Conditions (if any)</label>
+                                    <div class="health-conditions-wrapper">
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="None" id="condition_none" name="health_conditions">
+                                            <label class="form-check-label" for="condition_none">None</label>
+                                        </div>
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="Joint pain" id="condition_joint" name="health_conditions">
+                                            <label class="form-check-label" for="condition_joint">Joint Pain</label>
+                                        </div>
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="Hypertension" id="condition_hypertension" name="health_conditions">
+                                            <label class="form-check-label" for="condition_hypertension">Hypertension</label>
+                                        </div>
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="Diabetes" id="condition_diabetes" name="health_conditions">
+                                            <label class="form-check-label" for="condition_diabetes">Diabetes</label>
+                                        </div>
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="Back pain" id="condition_back" name="health_conditions">
+                                            <label class="form-check-label" for="condition_back">Back Pain</label>
+                                        </div>
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="Heart condition" id="condition_heart" name="health_conditions">
+                                            <label class="form-check-label" for="condition_heart">Heart Condition</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="previous_injuries" class="form-label">Previous Injuries</label>
+                                    <input type="text" class="form-control" id="previous_injuries" name="previous_injuries" placeholder="e.g., knee injury, back pain">
+                                </div>
+                            </div>
+
+                            <!-- Preferences Section -->
+                            <div class="form-section">
+                                <legend><i class="fas fa-cog me-2"></i>Preferences</legend>
+                                <div class="mb-3">
+                                    <label for="time_available" class="form-label">Time Available (minutes/day)</label>
+                                    <select class="form-select" id="time_available" name="time_available" required>
+                                        <option value="" selected disabled>Select Time</option>
+                                        <option value="15">15 minutes</option>
+                                        <option value="30">30 minutes</option>
+                                        <option value="45">45 minutes</option>
+                                        <option value="60">60 minutes</option>
+                                        <option value="90">90 minutes</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="equipment_access" class="form-label">Equipment Access</label>
+                                    <select class="form-select" id="equipment_access" name="equipment_access" required>
+                                        <option value="" selected disabled>Select Equipment Access</option>
+                                        <option value="None">None (Bodyweight only)</option>
+                                        <option value="Basic home">Basic Home Equipment</option>
+                                        <option value="Full gym">Full Gym Access</option>
+                                    </select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="exercise_preference" class="form-label">Exercise Preference</label>
+                                        <select class="form-select" id="exercise_preference" name="exercise_preference" required>
+                                            <option value="" selected disabled>Select Preference</option>
+                                            <option value="Cardio">Cardio</option>
+                                            <option value="Strength">Strength</option>
+                                            <option value="HIIT">HIIT</option>
+                                            <option value="Flexibility">Flexibility</option>
+                                            <option value="Mixed">Mixed (No Preference)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="intensity_preference" class="form-label">Intensity Preference</label>
+                                        <select class="form-select" id="intensity_preference" name="intensity_preference" required>
+                                            <option value="" selected disabled>Select Intensity</option>
+                                            <option value="Low">Low</option>
+                                            <option value="Moderate">Moderate</option>
+                                            <option value="High">High</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Target Body Areas</label>
+                                    <div class="health-conditions-wrapper">
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="Upper Body" id="upper_body" name="target_areas">
+                                            <label class="form-check-label" for="upper_body">Upper Body</label>
+                                        </div>
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="Lower Body" id="lower_body" name="target_areas">
+                                            <label class="form-check-label" for="lower_body">Lower Body</label>
+                                        </div>
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="Core" id="core" name="target_areas">
+                                            <label class="form-check-label" for="core">Core</label>
+                                        </div>
+                                        <div class="health-condition-item form-check">
+                                            <input class="form-check-input" type="checkbox" value="Full Body" id="full_body" name="target_areas">
+                                            <label class="form-check-label" for="full_body">Full Body</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">Get Your Weight Loss Plan</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="loading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Creating your personalized weight loss workout plan...</p>
+                    </div>
+                    
+                    <div class="result-container">
+                        <h2 class="mb-4 text-center" style="color: var(--primary);">Your Weight Loss Workout Plan</h2>
+                        
+                        <div class="mb-4 p-4 bg-light rounded shadow-sm">
+                            <h5>Your Fitness Profile</h5>
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <p><strong>Age:</strong> <span id="profile-age" class="badge bg-primary"></span></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p><strong>Gender:</strong> <span id="profile-gender" class="badge bg-primary"></span></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p><strong>BMI:</strong> <span id="profile-bmi" class="badge bg-primary"></span></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p><strong>Weight Loss Goal:</strong> <span id="profile-goal" class="badge bg-primary"></span> kg</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="mb-3">Recommended Exercises for Weight Loss</h4>
+                        <div id="exercises-container"></div>
+                        
+                        <div class="alert alert-info mt-4">
+                            <h5><i class="fas fa-lightbulb me-2"></i>Weight Loss Tips</h5>
+                            <ul class="mb-0">
+                                <li>Combine these exercises with a balanced diet for optimal results</li>
+                                <li>Aim for at least 150 minutes of moderate exercise per week</li>
+                                <li>Gradually increase intensity as your fitness improves</li>
+                                <li>Stay consistent - results come with regular exercise</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button id="try-again" class="btn btn-outline-secondary btn-lg">Create New Plan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3 class="footer-title">FitIntel</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem;">Your personalized health and fitness recommendation system powered by advanced machine learning algorithms.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="/">Home</a></li>
+                        <li class="footer-link"><a href="/food_recommendation">Food Recommendation</a></li>
+                        <li class="footer-link"><a href="/exercise_recommendation">Exercise Recommendation</a></li>
+                        <li class="footer-link"><a href="/about.html">About Us</a></li>
+                        <li class="footer-link"><a href="#footer">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">FAQ</a></li>
+                        <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                        <li class="footer-link"><a href="#">Terms of Service</a></li>
+                        <li class="footer-link"><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--primary);"></i> 123 Fitness Street, Health City</li>
+                        <li class="footer-link"><i class="fas fa-phone" style="margin-right: 10px; color: var(--primary);"></i> +1 (555) 123-4567</li>
+                        <li class="footer-link"><i class="fas fa-envelope" style="margin-right: 10px; color: var(--primary);"></i> info@fitintel.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 FitIntel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('exerciseForm');
+            const resultContainer = document.querySelector('.result-container');
+            const loadingIndicator = document.querySelector('.loading');
+            const exercisesContainer = document.getElementById('exercises-container');
+            const tryAgainBtn = document.getElementById('try-again');
+            
+            // Handle the "None" checkbox for health conditions
+            const noneCheckbox = document.getElementById('condition_none');
+            const otherConditions = document.querySelectorAll('input[name="health_conditions"]:not(#condition_none)');
+            
+            noneCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    otherConditions.forEach(checkbox => {
+                        checkbox.checked = false;
+                        checkbox.disabled = true;
+                    });
+                } else {
+                    otherConditions.forEach(checkbox => {
+                        checkbox.disabled = false;
+                    });
+                }
+            });
+            
+            otherConditions.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        noneCheckbox.checked = false;
+                    }
+                });
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading
+                loadingIndicator.style.display = 'block';
+                resultContainer.style.display = 'none';
+                
+                // Submit form data
+                const formData = new FormData(form);
+                
+                // Send request
+                fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Display profile info
+                        document.getElementById('profile-age').textContent = data.profile.age;
+                        document.getElementById('profile-gender').textContent = data.profile.gender;
+                        document.getElementById('profile-bmi').textContent = data.profile.bmi;
+                        document.getElementById('profile-goal').textContent = data.profile.weight_loss_goal;
+                        
+                        // Display exercises
+                        exercisesContainer.innerHTML = '';
+                        data.exercises.forEach((exercise, index) => {
+                            const exerciseCard = document.createElement('div');
+                            exerciseCard.className = 'exercise-card';
+                            exerciseCard.innerHTML = `
+                                <h5><i class="fas fa-running me-2"></i>${exercise.name}</h5>
+                                <p><strong>Duration:</strong> ${exercise.duration}</p>
+                                <p>${exercise.description}</p>
+                                ${exercise.benefits ? `<p><strong>Weight Loss Benefits:</strong> ${exercise.benefits}</p>` : ''}
+                            `;
+                            exercisesContainer.appendChild(exerciseCard);
+                        });
+                        
+                        // Show results
+                        resultContainer.style.display = 'block';
+                        window.scrollTo({ top: resultContainer.offsetTop - 20, behavior: 'smooth' });
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                })
+                .finally(() => {
+                    loadingIndicator.style.display = 'none';
+                });
+            });
+            
+            // Try again button
+            tryAgainBtn.addEventListener('click', function() {
+                resultContainer.style.display = 'none';
+                form.reset();
+                
+                // Reset disabled state for health conditions
+                otherConditions.forEach(checkbox => {
+                    checkbox.disabled = false;
+                });
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

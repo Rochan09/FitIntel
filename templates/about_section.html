@@ -1,0 +1,14 @@
+<section id="about" class="section" style="background: linear-gradient(135deg, #f5fff7 60%, #e3f2fd 100%);">
+    <div class="container" style="text-align:center;">
+        <h2 class="section-title" style="font-size:2.3rem;letter-spacing:1px;">About FitIntel</h2>
+        <p class="section-subtitle" style="font-size:1.15rem;">Revolutionizing health and fitness through AI-powered personalized recommendations.</p>
+        <div class="about-card" style="background: linear-gradient(120deg, #e0ffe8 60%, #e3f2fd 100%); border-radius:18px; box-shadow:0 8px 32px rgba(76,175,80,0.10); display:inline-block; padding:2rem 2.5rem; margin:2rem auto 1.5rem;">
+            <img src="{{ url_for('static', filename='fitintel.jpg') }}" alt="FitIntel Logo" style="max-width:220px; width:100%; border-radius:14px; box-shadow:0 4px 16px rgba(0,0,0,0.08); transition:transform 0.3s;">
+        </div>
+        <!-- About content goes here -->
+        <style>
+        .about-card:hover img { transform: scale(1.05); }
+        .about-card:hover { transform: translateY(-8px) scale(1.03); box-shadow:0 16px 40px rgba(76,175,80,0.18); }
+        </style>
+    </div>
+</section>

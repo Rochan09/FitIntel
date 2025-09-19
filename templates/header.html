@@ -1,0 +1,322 @@
+<style>
+    .header {
+        background: #fff;
+        color: #222;
+        padding: 0.8rem 0;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    .logo {
+        font-size: 2rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #222;
+        text-decoration: none;
+    }
+    .logo i {
+        margin-right: 10px;
+        font-size: 2rem;
+        color: #4CAF50;
+        animation: pulse 2s infinite;
+    }
+    .nav-menu {
+        display: flex;
+        align-items: center;
+        margin-right: auto;
+        margin-left: 2rem;
+    }
+    .nav-item {
+        margin-left: 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: #222;
+        padding: 0.6rem 1.2rem;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+        position: relative;
+        background: none;
+    }
+    .nav-item:hover {
+        color: #fff;
+        background: linear-gradient(135deg, #4CAF50, #2196F3);
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+        transform: translateY(-2px);
+    }
+    .nav-item.active {
+        background: linear-gradient(135deg, #4CAF50, #2196F3);
+        color: white;
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        transform: translateY(-2px);
+    }
+    .nav-item.active:hover {
+        /* Keep the same as .nav-item.active for persistence */
+        background: linear-gradient(135deg, #4CAF50, #2196F3);
+        color: white;
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        transform: translateY(-2px);
+    }
+    .auth-buttons {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+    .auth-btn {
+        padding: 0.6rem 1.5rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        margin-left: 1rem;
+        border: 2px solid transparent;
+    }
+    .login-btn {
+        background: transparent;
+        color: #222;
+        border-color: #4CAF50;
+    }
+    .login-btn:hover {
+        background: rgba(76, 175, 80, 0.1);
+    }
+    .register-btn {
+        background: linear-gradient(135deg, #4CAF50, #2196F3);
+        color: white;
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+    }
+    .register-btn:hover {
+        background: #1976D2;
+    }
+    .user-info {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+    .username {
+        font-weight: 600;
+        margin-right: 1rem;
+    }
+    .logout-btn {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 0.5rem 1.2rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        cursor: pointer;
+        transition: background 0.3s;
+        text-decoration: none;
+    }
+    .logout-btn:hover {
+        background: #388E3C;
+    }
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        z-index: 1100;
+    }
+    .hamburger span {
+        display: block;
+        width: 28px;
+        height: 3px;
+        margin: 4px 0;
+        background: #222;
+        border-radius: 2px;
+        transition: 0.4s;
+    }
+    @media (max-width: 768px) {
+        .nav-menu {
+            position: absolute;
+            top: 120px;
+            left: 62%;
+            transform: translate(-50%, -200%);
+            width: 56vw;
+            max-width: 220px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(33,150,243,0.10);
+            flex-direction: column;
+            align-items: center;
+            padding: 0.7rem 0.4rem 0.7rem 0.4rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.35s cubic-bezier(.4,0,.2,1);
+            z-index: 2000;
+        }
+        .nav-menu.active {
+            transform: translate(-50%, 0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .nav-item {
+            margin: 0.35rem 0;
+            font-size: 0.98rem;
+            width: 100%;
+            text-align: center;
+            border-radius: 8px;
+            padding: 0.35rem 0;
+        }
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 44px;
+            height: 44px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(33,150,243,0.08);
+            transition: box-shadow 0.3s;
+        }
+        .hamburger.active {
+            box-shadow: 0 4px 16px rgba(33,150,243,0.18);
+        }
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            margin: 4px 0;
+            background: #222;
+            border-radius: 2px;
+            transition: 0.4s;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        .header-content {
+            flex-wrap: wrap;
+        }
+        .auth-buttons, .user-info {
+            margin: 1rem 0 0;
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    body {
+        padding-top: 20px;
+    }
+</style>
+<header class="header" id="header">
+    <div class="container">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>FitIntel</span>
+            </a>
+            <div class="hamburger" id="hamburgerMenu" aria-label="Open menu" tabindex="0">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav class="nav-menu" id="mainNavMenu">
+                <a href="/" class="nav-item{% if active_page == 'home' %} active{% endif %}">Home</a>
+                {% if session.get('username') %}
+                    <a href="/food_recommendation" class="nav-item{% if active_page == 'food' %} active{% endif %}">Food</a>
+                    <a href="/exercise_recommendation" class="nav-item{% if active_page == 'exercise' %} active{% endif %}">Exercise</a>
+                {% endif %}
+                <a href="/about" class="nav-item{% if active_page == 'about' %} active{% endif %}">About</a>
+                <a href="/contact" class="nav-item{% if active_page == 'contact' %} active{% endif %}">Contact</a>
+                {% if not session.get('username') %}
+                    <a href="/login" class="nav-item">Login</a>
+                    <a href="/register" class="nav-item">Register</a>
+                {% endif %}
+                {% if session.get('username') %}
+                <style>
+                @media (max-width: 768px) {
+                    .mobile-user-info { display: flex !important; flex-direction: column; align-items: center; margin-top: 10px; }
+                    .user-info { display: none !important; }
+                    .mobile-welcome { font-size: 1.1em; margin-bottom: 10px; font-weight: 500; }
+                    .mobile-logout-btn {
+                        margin-top: 18px;
+                        padding: 12px 36px;
+                        font-size: 1.1em;
+                        border-radius: 30px;
+                        background: #fff;
+                        color: #2ecc40;
+                        border: 2px solid #2ecc40;
+                        font-weight: bold;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+                        transition: background 0.2s, color 0.2s;
+                    }
+                    .mobile-logout-btn:hover {
+                        background: #2ecc40;
+                        color: #fff;
+                    }
+                }
+                </style>
+                <div class="mobile-user-info" style="display: none;">
+                    <div class="mobile-welcome">Welcome ! - {{ session['username'] }}</div>
+                    <form action="/logout" method="post" style="width:100%;display:flex;justify-content:center;">
+                        <button type="submit" class="mobile-logout-btn">Logout</button>
+                    </form>
+                </div>
+                {% endif %}
+            </nav>
+            {# Login and Register buttons removed; now only in menu #}
+            {% if session.get('username') %}
+            <div class="user-info" id="userInfo">
+                <span class="username">Welcome!..{{ session['username'] }}</span>
+                <a href="/logout" class="logout-btn">Logout</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
+<script>
+    // Hamburger menu toggle with animation
+    const hamburger = document.getElementById('hamburgerMenu');
+    const navMenu = document.getElementById('mainNavMenu');
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+        document.addEventListener('click', function(event) {
+            if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+        hamburger.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            }
+        });
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+    }
+</script>

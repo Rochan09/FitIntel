@@ -1,0 +1,11 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        {% include 'header.html' %}
+</head>
+
+{% block content %}
+
+<h1>Dashboard page:{{session['username']}} - ({{session['user_id']}})</h1>
+<a href="/logout">Logout</a>
+
+{% endblock %}

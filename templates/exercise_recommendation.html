@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise Recommendations - FitIntel</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4CAF50;
+      --secondary: #2196F3;
+      --dark: #222;
+      --light: #f9f9f9;
+      --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.25);
+      --shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #eef2f3, #d9e4ec);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 4rem 1rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: "";
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--gradient);
+      border-radius: 2px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: #555;
+      max-width: 650px;
+      margin: 0 auto 3rem;
+      font-size: 1.1rem;
+    }
+
+    /* Cards Grid */
+    .submodules {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2rem;
+    }
+
+    .submodule-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      color: var(--dark);
+      text-decoration: none;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .submodule-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Card Image */
+    .submodule-img {
+      height: 220px;
+      background-position: center;
+      background-size: cover;
+      position: relative;
+    }
+
+    .submodule-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+      transition: all 0.3s ease;
+    }
+
+    .submodule-card:hover .submodule-overlay {
+      background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.6));
+    }
+
+    .submodule-label {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: var(--gradient);
+      color: white;
+      font-size: 0.85rem;
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Card Content */
+    .submodule-content {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .submodule-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: var(--dark);
+      position: relative;
+    }
+
+    .submodule-title::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background: var(--gradient);
+      border-radius: 3px;
+    }
+
+    .submodule-description {
+      color: #666;
+      font-size: 1rem;
+      margin: 1rem 0 1.5rem;
+      line-height: 1.6;
+    }
+
+    .submodule-features {
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
+    .submodule-feature {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+      color: #444;
+    }
+
+    .submodule-feature i {
+      color: var(--primary);
+      margin-right: 10px;
+      font-size: 0.9rem;
+    }
+
+    /* Button */
+    .submodule-btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background: var(--gradient);
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.35);
+    }
+
+    .submodule-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(33, 150, 243, 0.45);
+    }
+
+    /* Background images */
+    .weight-img { background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438'); }
+    .fitness-img { background-image: url("{{ url_for('static', filename='/fitness.jpg') }}"); }
+    .strength-img { background-image: url('https://images.unsplash.com/photo-1534258936925-c58bed479fc3'); }
+    .flexibility-img { background-image: url('https://images.unsplash.com/photo-1545205597-3d9d02c29597'); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .section-title {
+        font-size: 2rem;
+      }
+      .submodule-content {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar/Header -->
+  {% include 'header.html' %}
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <h2 class="section-title">Exercise Recommendations</h2>
+    <p class="section-subtitle">Discover personalized workout plans tailored to your fitness goals and abilities</p>
+    
+    <div class="submodules">
+      <!-- Weight Loss -->
+      <a href="/weight" class="submodule-card">
+        <div class="submodule-img weight-img">
+          <span class="submodule-label">Fat Burning</span>
+          <div class="submodule-overlay"></div>
+        </div>
+        <div class="submodule-content">
+          <h3 class="submodule-title">Weight Loss</h3>
+          <p class="submodule-description">
+            High-calorie burning workouts designed to help you shed pounds effectively and sustainably.
+          </p>
+          <div class="submodule-features">
+            <div class="submodule-feature"><i class="fas fa-check-circle"></i> HIIT workouts</div>
+            <div class="submodule-feature"><i class="fas fa-check-circle"></i> Cardio routines</div>
+            <div class="submodule-feature"><i class="fas fa-check-circle"></i> Metabolic conditioning</div>
+            <div class="submodule-feature"><i class="fas fa-check-circle"></i> Progress tracking</div>
+          </div>
+          <div class="submodule-btn">View Workouts</div>
+        </div>
+      </a>
+
+      <!-- General Fitness -->
+      <a href="/fitness" class="submodule-card">
+        <div class="submodule-img fitness-img">
+          <span class="submodule-label">All-Around</span>
+          <div class="submodule-overlay"></div>
+        </div>
+        <div class="submodule-content">
+          <h3 class="submodule-title">General Fitness</h3>
+          <p class="submodule-description">
+            Balanced routines to improve cardiovascular health, strength, and overall wellbeing.
+          </p>
+          <div class="submodule-features">
+            <div class="submodule-feature"><i class="fas fa-check-circle"></i> Full-body workouts</div>
+            <div class="submodule-feature"><i class="fas fa-check-circle"></i> Beginner to advanced</div>
+            <div class="submodule-feature"><i class="fas fa-check-circle"></i> Equipment optional</div>
+            <div class="submodule-feature"><i class="fas fa-check-circle"></i> Time-efficient</div>
+          </div>
+          <div class="submodule-btn">View Workouts</div>
+        </div>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

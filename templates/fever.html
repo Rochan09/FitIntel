@@ -1,0 +1,505 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fever Diet Recommendation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #dc3545;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .result-card {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #d4edda; /* Default background color for low risk */
+            border: 1px solid #c3e6cb;
+        }
+        .result-card.moderate-risk {
+            background-color: #fff3cd; /* Background color for moderate risk */
+            border: 1px solid #ffeeba;
+        }
+        .result-card.high-risk {
+            background-color: #f8d7da; /* Background color for high risk */
+            border: 1px solid #f5c6cb;
+        }
+        .meal-section {
+            margin-top: 15px;
+        }
+        .meal-title {
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fever Diet Recommendation</h1>
+        
+        <form id="prediction-form">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" class="form-control" id="age" name="age" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="weight">Weight (kg):</label>
+                        <input type="number" step="0.1" class="form-control" id="weight" name="weight" required>
+            {% include 'header.html' %}
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="fever_level">Fever Level (°C):</label>
+                        <input type="number" step="0.1" class="form-control" id="fever_level" name="fever_level" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Get Recommendations</button>
+            </div>
+        </form>
+        
+        <div id="results" class="hidden result-card">
+            <h3 class="text-center">Your Recommendations</h3>
+            
+            <div class="meal-section">
+                <p class="meal-title">Breakfast:</p>
+                <p id="breakfast"></p>
+            </div>
+            
+            <div class="meal-section">
+                <p class="meal-title">Lunch:</p>
+                <p id="lunch"></p>
+            </div>
+            
+            <div class="meal-section">
+                <p class="meal-title">Dinner:</p>
+                <p id="dinner"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form data
+            const formData = new FormData(this);
+
+            // Send data to the server
+            fetch('/predict_fever', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display results
+                document.getElementById('breakfast').textContent = data.breakfast;
+                document.getElementById('lunch').textContent = data.lunch;
+                document.getElementById('dinner').textContent = data.dinner;
+
+                // Add risk category styling
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.classList.remove('hidden');
+                resultsDiv.classList.remove('low-risk', 'moderate-risk', 'high-risk'); // Reset classes
+                resultsDiv.classList.add(data.risk_category.toLowerCase() + '-risk'); // Add new class
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fever Diet Recommendation - FitIntel</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #2196F3;
+            --warning: #FFA726;
+            --light: #F5F5F5;
+            --dark: #333;
+        }
+        body {
+            background: linear-gradient(135deg, #f6f8f9 0%, #e5ebee 100%);
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+        }
+        .logo i {
+            margin-right: 15px;
+            font-size: 3rem;
+            animation: pulse 2s infinite;
+        }
+        .nav-item {
+            margin-left: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.4s ease;
+        }
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            flex-shrink: 0;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        .footer-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        .footer-links {
+            list-style: none;
+        }
+        .footer-link {
+            margin-bottom: 0.8rem;
+        }
+        .footer-link a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .footer-link a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #555;
+        }
+        .social-icons {
+            display: flex;
+            margin-top: 1rem;
+        }
+        .social-icon {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        .social-icon:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>FitIntel</span>
+                </div>
+                <nav>
+                    <a href="/food_recommendation" class="nav-item">Back to Home</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Input Form -->
+            <div class="bg-white rounded-xl shadow-2xl p-8 card">
+                <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">
+                    <i class="fas fa-thermometer-half mr-2"></i>Fever Diet Planner
+                </h1>
+                <form id="prediction-form" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Age</label>
+                            <input 
+                                type="number" 
+                                name="age" 
+                                required 
+                                min="1" 
+                                max="120" 
+                                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                                placeholder="1-120"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Weight (kg)</label>
+                            <input 
+                                type="number" 
+                                step="0.1" 
+                                name="weight" 
+                                required 
+                                min="20" 
+                                max="200" 
+                                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                                placeholder="20-200"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Gender</label>
+                            <select 
+                                name="gender" 
+                                required 
+                                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Fever Level (°C)</label>
+                            <input 
+                                type="number" 
+                                step="0.1" 
+                                name="fever_level" 
+                                required 
+                                min="36" 
+                                max="42" 
+                                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                                placeholder="36-42"
+                            >
+                        </div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+                    >
+                        <i class="fas fa-heart mr-2"></i>Get Recommendations
+                    </button>
+                </form>
+            </div>
+
+            <!-- Recommendations Section -->
+            <div id="recommendations" class="bg-white rounded-xl shadow-2xl p-8 card hidden">
+                <h2 class="text-2xl font-bold mb-6 text-center text-green-600">
+                    <i class="fas fa-clipboard-list mr-2"></i>Your Fever Diet Plan
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-700 mb-2">
+                            <i class="fas fa-sun mr-2"></i>Breakfast
+                        </h3>
+                        <p id="breakfast" class="text-gray-700"></p>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-green-700 mb-2">
+                            <i class="fas fa-cloud-sun mr-2"></i>Lunch
+                        </h3>
+                        <p id="lunch" class="text-gray-700"></p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-orange-700 mb-2">
+                            <i class="fas fa-moon mr-2"></i>Dinner
+                        </h3>
+                        <p id="dinner" class="text-gray-700"></p>
+                    </div>
+
+                    <button 
+                        id="printPlanBtn" 
+                        class="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition duration-300 flex items-center justify-center"
+                    >
+                        <i class="fas fa-print mr-2"></i>Print Diet Plan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3 class="footer-title">FitIntel</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem;">Your personalized health and fitness recommendation system powered by advanced machine learning algorithms.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">Home</a></li>
+                        <li class="footer-link"><a href="#">Food Recommendation</a></li>
+                        <li class="footer-link"><a href="#">Exercise Recommendation</a></li>
+                        <li class="footer-link"><a href="#">About Us</a></li>
+                        <li class="footer-link"><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">FAQ</a></li>
+                        <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                        <li class="footer-link"><a href="#">Terms of Service</a></li>
+                        <li class="footer-link"><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--primary);"></i> 123 Fitness Street, Health City</li>
+                        <li class="footer-link"><i class="fas fa-phone" style="margin-right: 10px; color: var(--primary);"></i> +1 (555) 123-4567</li>
+                        <li class="footer-link"><i class="fas fa-envelope" style="margin-right: 10px; color: var(--primary);"></i> info@fitintel.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 FitIntel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const loadingDiv = document.createElement('div');
+            loadingDiv.innerHTML = `
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+                </div>
+            `;
+            document.body.appendChild(loadingDiv);
+
+            axios.post('/predict_fever', formData)
+                .then(response => {
+                    document.body.removeChild(loadingDiv);
+                    const recDiv = document.getElementById('recommendations');
+                    document.getElementById('breakfast').textContent = response.data.breakfast;
+                    document.getElementById('lunch').textContent = response.data.lunch;
+                    document.getElementById('dinner').textContent = response.data.dinner;
+
+                    recDiv.classList.remove('hidden');
+                    window.scrollTo({ top: recDiv.offsetTop, behavior: 'smooth' });
+                })
+                .catch(error => {
+                    document.body.removeChild(loadingDiv);
+                    console.error('Error:', error);
+                    alert('Failed to get recommendations');
+                });
+        });
+
+        document.getElementById('printPlanBtn').addEventListener('click', function() {
+            const printContents = document.getElementById('recommendations').innerHTML;
+            const originalContents = document.body.innerHTML;
+            document.body.innerHTML = `
+                <div class="container mx-auto p-8">
+                    <h1 class="text-3xl font-bold mb-6 text-center">Fever Diet Plan</h1>
+                    ${printContents}
+                </div>
+            `;
+            window.print();
+            document.body.innerHTML = originalContents;
+            location.reload();
+        });
+    </script>
+</body>
+</html>

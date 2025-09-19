@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Food Recommendations - FitIntel</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4CAF50;
+      --secondary: #2196F3;
+      --dark: #222;
+      --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* Main Section */
+    .main-content {
+      padding: 4rem 1rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      position: relative;
+      color: var(--dark);
+    }
+
+    .section-title::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      border-radius: 3px;
+      background: var(--gradient);
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: #666;
+      max-width: 700px;
+      margin: 1rem auto 3rem;
+      font-size: 1.1rem;
+    }
+
+    /* Cards Grid */
+    .submodules {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .submodule-card {
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .submodule-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .submodule-img {
+      height: 220px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .submodule-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6));
+    }
+
+    .submodule-label {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 6px 14px;
+      background: var(--gradient);
+      border-radius: 50px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .fever-img { background-image: url("{{ url_for('static', filename='/fever.jpg') }}"); }
+    .heart-img { background-image: url("{{ url_for('static', filename='/heart.jpg') }}"); }
+    .diabetes-img { background-image: url("{{ url_for('static', filename='/diabetes.png') }}"); }
+    .diet-img { background-image: url("https://images.unsplash.com/photo-1498837167922-ddd27525d352"); }
+
+    .submodule-content {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .submodule-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: var(--primary);
+      position: relative;
+    }
+
+    .submodule-title::after {
+      content: '';
+      width: 50px;
+      height: 3px;
+      background: var(--gradient);
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 3px;
+    }
+
+    .submodule-description {
+      margin: 1.5rem 0;
+      color: #555;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .submodule-features {
+      text-align: left;
+      margin: 1.5rem 0;
+    }
+
+    .submodule-feature {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.7rem;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    .submodule-feature i {
+      margin-right: 10px;
+      color: var(--secondary);
+      font-size: 1rem;
+    }
+
+    .submodule-btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      background: var(--gradient);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 18px rgba(33, 150, 243, 0.35);
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .submodule-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(33, 150, 243, 0.5);
+      background: linear-gradient(135deg, #388E3C, #1976D2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .section-title {
+        font-size: 2rem;
+      }
+      .submodules {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar/Header -->
+  {% include 'header.html' %}
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <h2 class="section-title">Food Recommendations</h2>
+      <p class="section-subtitle">Discover personalized nutrition plans tailored to your specific health needs and goals</p>
+
+      <div class="submodules">
+        <!-- Fever -->
+        <a href="/fever" class="submodule-card">
+          <div class="submodule-img fever-img">
+            <span class="submodule-label">Immunity Boost</span>
+            <div class="submodule-overlay"></div>
+          </div>
+          <div class="submodule-content">
+            <h3 class="submodule-title">For Fever</h3>
+            <p class="submodule-description">
+              Nutrient-rich meals designed to support your immune system and speed up recovery.
+            </p>
+            <div class="submodule-features">
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Hydration-focused recipes</div>
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Easy-to-digest foods</div>
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Immune-boosting ingredients</div>
+            </div>
+            <div class="submodule-btn">View Recommendations</div>
+          </div>
+        </a>
+
+        <!-- Heart -->
+        <a href="/heart" class="submodule-card">
+          <div class="submodule-img heart-img">
+            <span class="submodule-label">Heart Health</span>
+            <div class="submodule-overlay"></div>
+          </div>
+          <div class="submodule-content">
+            <h3 class="submodule-title">For Heart Disease</h3>
+            <p class="submodule-description">
+              Heart-healthy meals to support cardiovascular function and overall wellness.
+            </p>
+            <div class="submodule-features">
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Low sodium options</div>
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Healthy fats focus</div>
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Cholesterol-friendly</div>
+            </div>
+            <div class="submodule-btn">View Recommendations</div>
+          </div>
+        </a>
+
+        <!-- Diabetes -->
+        <a href="/diabetes" class="submodule-card">
+          <div class="submodule-img diabetes-img">
+            <span class="submodule-label">Blood Sugar</span>
+            <div class="submodule-overlay"></div>
+          </div>
+          <div class="submodule-content">
+            <h3 class="submodule-title">For Diabetes</h3>
+            <p class="submodule-description">
+              Balanced meals designed to help maintain healthy blood sugar levels.
+            </p>
+            <div class="submodule-features">
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Low glycemic index foods</div>
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Portion-controlled</div>
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Fiber-rich ingredients</div>
+            </div>
+            <div class="submodule-btn">View Recommendations</div>
+          </div>
+        </a>
+
+        <!-- Diet -->
+        <a href="/diet" class="submodule-card">
+          <div class="submodule-img diet-img">
+            <span class="submodule-label">Healthy Living</span>
+            <div class="submodule-overlay"></div>
+          </div>
+          <div class="submodule-content">
+            <h3 class="submodule-title">For Diet Maintenance</h3>
+            <p class="submodule-description">
+              Sustainable eating plans for long-term health and weight management.
+            </p>
+            <div class="submodule-features">
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Balanced nutrition</div>
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Calorie-controlled</div>
+              <div class="submodule-feature"><i class="fas fa-check-circle"></i> Variety of cuisines</div>
+            </div>
+            <div class="submodule-btn">View Recommendations</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
