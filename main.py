@@ -13,8 +13,16 @@ import warnings
 
 # Initialize Flask app
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'ASLDFJASDLFADS'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:rochan@localhost:5432/flask_auth_db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'ASLDFJASDLFADS')
+
+# Database configuration - use environment variable for production
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    # Production database (Render will provide this)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    # Development database
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:rochan@localhost:5432/flask_auth_db'
 
 # Initialize extensions
 bcrypt = Bcrypt(app)
@@ -118,14 +126,17 @@ def load_food_models():
         print(f"Warning: Could not load diabetes food models. This may be due to a version mismatch, a corrupted model file, or a memory allocation issue. Error: {e}")
     
     try:
-        food_models['diet']['breakfast_model'] = joblib.load('models/breakfast_model.pkl')
-        food_models['diet']['lunch_model'] = joblib.load('models/lunch_model.pkl')
-        food_models['diet']['dinner_model'] = joblib.load('models/dinner_model.pkl')
+        # TODO: Temporarily disabled for deployment - large models (620MB each)
+        # food_models['diet']['breakfast_model'] = joblib.load('models/breakfast_model.pkl')
+        # food_models['diet']['lunch_model'] = joblib.load('models/lunch_model.pkl')
+        # food_models['diet']['dinner_model'] = joblib.load('models/dinner_model.pkl')
+        
+        # Load smaller models only
         food_models['diet']['scaler'] = joblib.load('models/scaler.pkl')
         food_models['diet']['le_gender'] = joblib.load('models/le_gender.pkl')
         food_models['diet']['le_dietary_pref'] = joblib.load('models/le_dietary_pref.pkl')
         food_models['diet']['le_weight_loss_plan'] = joblib.load('models/le_weight_loss_plan.pkl')
-        print("Loaded diet food models")
+        print("Loaded diet food models (without large models for deployment)")
     except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) as e:
         print(f"Warning: Could not load diet food models. This may be due to a version mismatch, a corrupted model file, or a memory allocation issue. Error: {e}")
     
@@ -604,26 +615,62 @@ def recommend_diet():
     weight_loss_plan = request.form['weight_loss_plan']
     meals_per_day = int(request.form['meals_per_day'])
 
-    gender_encoded = food_models['diet']['le_gender'].transform([gender])[0]
-    dietary_pref_encoded = food_models['diet']['le_dietary_pref'].transform([dietary_preference])[0]
-    weight_loss_plan_encoded = food_models['diet']['le_weight_loss_plan'].transform([weight_loss_plan])[0]
+    # TODO: Temporarily disabled for deployment - using dummy data instead of large models
+    # The large models (620MB each) are temporarily disabled for successful deployment
+    # Once deployed, these can be moved to external storage (Google Drive/S3) and loaded at runtime
+    
+    try:
+        gender_encoded = food_models['diet']['le_gender'].transform([gender])[0]
+        dietary_pref_encoded = food_models['diet']['le_dietary_pref'].transform([dietary_preference])[0]
+        weight_loss_plan_encoded = food_models['diet']['le_weight_loss_plan'].transform([weight_loss_plan])[0]
 
-    input_features = np.array([
-        age, height, weight, gender_encoded, 
-        dietary_pref_encoded, weight_loss_plan_encoded, meals_per_day
-    ]).reshape(1, -1)
+        input_features = np.array([
+            age, height, weight, gender_encoded, 
+            dietary_pref_encoded, weight_loss_plan_encoded, meals_per_day
+        ]).reshape(1, -1)
 
-    input_scaled = food_models['diet']['scaler'].transform(input_features)
+        input_scaled = food_models['diet']['scaler'].transform(input_features)
 
-    breakfast_pred = food_models['diet']['breakfast_model'].predict(input_scaled)[0]
-    lunch_pred = food_models['diet']['lunch_model'].predict(input_scaled)[0]
-    dinner_pred = food_models['diet']['dinner_model'].predict(input_scaled)[0]
-
-    return jsonify({
-        'breakfast': breakfast_pred,
-        'lunch': lunch_pred,
-        'dinner': dinner_pred
-    })
+        # Temporarily return sample recommendations instead of using large models
+        # breakfast_pred = food_models['diet']['breakfast_model'].predict(input_scaled)[0]
+        # lunch_pred = food_models['diet']['lunch_model'].predict(input_scaled)[0]
+        # dinner_pred = food_models['diet']['dinner_model'].predict(input_scaled)[0]
+        
+        # Sample recommendations based on dietary preference and weight loss plan
+        sample_recommendations = {
+            'vegetarian': {
+                'breakfast': 'Oatmeal with fruits and nuts',
+                'lunch': 'Quinoa salad with vegetables',
+                'dinner': 'Grilled vegetables with brown rice'
+            },
+            'non-vegetarian': {
+                'breakfast': 'Scrambled eggs with whole wheat toast',
+                'lunch': 'Grilled chicken salad',
+                'dinner': 'Baked fish with steamed vegetables'
+            },
+            'vegan': {
+                'breakfast': 'Chia seed pudding with berries',
+                'lunch': 'Lentil soup with whole grain bread',
+                'dinner': 'Tofu stir-fry with quinoa'
+            }
+        }
+        
+        recommendations = sample_recommendations.get(dietary_preference, sample_recommendations['vegetarian'])
+        
+        return jsonify({
+            'breakfast': recommendations['breakfast'],
+            'lunch': recommendations['lunch'],
+            'dinner': recommendations['dinner'],
+            'note': 'These are sample recommendations. Full ML predictions will be available after model optimization.'
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'breakfast': 'Healthy breakfast option',
+            'lunch': 'Balanced lunch meal',
+            'dinner': 'Nutritious dinner',
+            'note': f'Using fallback recommendations. Error: {str(e)}'
+        })
 
 @app.route('/contact')
 def contact():
