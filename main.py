@@ -56,8 +56,9 @@ def load_exercise_models():
         if os.path.exists(model_path):
             try:
                 models[f'Exercise_{i}'] = joblib.load(model_path)
-            except (AttributeError, pickle.UnpicklingError, FileNotFoundError) as e:
-                print(f"Warning: Could not load model {model_path}. This may be due to a version mismatch in scikit-learn or a missing model file. Error: {e}")
+                print(f"✅ Loaded {model_path}")
+            except Exception as e:
+                print(f"❌ Warning: Could not load model {model_path}. Error: {e}")
 
     models1 = {}
     for i in range(1, 4):
@@ -65,18 +66,22 @@ def load_exercise_models():
         if os.path.exists(model_path):
             try:
                 models1[f'Exercise_{i}'] = joblib.load(model_path)
-            except (AttributeError, pickle.UnpicklingError, FileNotFoundError) as e:
-                print(f"Warning: Could not load model {model_path}. This may be due to a version mismatch in scikit-learn or a missing model file. Error: {e}")
+                print(f"✅ Loaded {model_path}")
+            except Exception as e:
+                print(f"❌ Warning: Could not load model {model_path}. Error: {e}")
     
     unique_exercises = []
     file_path = 'models/unique_exercises.txt'
     if os.path.exists(file_path):
-        with open(file_path, 'r') as f:
-            unique_exercises = [line.strip() for line in f.readlines()]
+        try:
+            with open(file_path, 'r') as f:
+                unique_exercises = [line.strip() for line in f.readlines()]
+            print(f"✅ Loaded {len(unique_exercises)} unique exercises")
+        except Exception as e:
+            print(f"❌ Warning: Could not load unique exercises: {e}")
     
     print(f"Loaded {len(models)} exercise models from first set")
     print(f"Loaded {len(models1)} exercise models from second set")
-    print(f"Loaded {len(unique_exercises)} unique exercises")
     
     return models, models1, unique_exercises
 
@@ -151,8 +156,20 @@ with app.app_context():
     except Exception as e:
         print(f"Warning: Could not create database tables: {e}")
     
-    exercise_models, exercise_models1, unique_exercises = load_exercise_models()
-    food_models = load_food_models()
+    # Load models with error handling
+    try:
+        exercise_models, exercise_models1, unique_exercises = load_exercise_models()
+        print("Exercise models loaded successfully")
+    except Exception as e:
+        print(f"Warning: Could not load exercise models: {e}")
+        exercise_models, exercise_models1, unique_exercises = {}, {}, []
+    
+    try:
+        food_models = load_food_models()
+        print("Food models loaded successfully")
+    except Exception as e:
+        print(f"Warning: Could not load food models: {e}")
+        food_models = {'fever': {}, 'heart': {}, 'diabetes': {}, 'diet': {}}
 
 # ==================== Helper Functions ====================
 def get_bmi_category(bmi):
