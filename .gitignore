@@ -12,6 +12,18 @@ ENV/
 # Log files
 *.log
 
+# Database files (but keep data directory structure)
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+*.db
+*.sqlite
+*.sqlite3
+
+# But keep the data directory itself
+!data/
+!data/.gitkeep
+
 # IDE files
 .vscode/
 .idea/

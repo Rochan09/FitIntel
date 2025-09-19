@@ -30,7 +30,23 @@ if database_url:
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
     # Use SQLite for deployment/development when PostgreSQL is not available
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fitintel.db'
+    # Create a data directory if it doesn't exist
+    data_dir = os.path.join(os.getcwd(), 'data')
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+    
+    # Use absolute path for SQLite database
+    db_path = os.path.join(data_dir, 'fitintel.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+    print(f"💾 Database path: {db_path}")
+
+# Additional database configuration for better persistence
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_timeout': 20,
+    'pool_recycle': -1,
+    'pool_pre_ping': True
+}
 
 # Initialize extensions
 bcrypt = Bcrypt(app)
@@ -177,12 +193,29 @@ def get_food_models(model_type=None):
 
 # Load all models at startup
 with app.app_context():
-    # Try to create database tables
+    # Try to create database tables with better error handling
     try:
+        # First, ensure we can connect to the database
+        db.engine.execute("SELECT 1")
+        print("✅ Database connection successful")
+        
+        # Create all tables
         db.create_all()
         print("✅ Database tables created successfully")
+        
+        # Verify tables exist by checking User table
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        tables = inspector.get_table_names()
+        print(f"📊 Found {len(tables)} database tables: {tables}")
+        
+        # Check if we have any existing users
+        user_count = User.query.count()
+        print(f"👥 Current user count: {user_count}")
+        
     except Exception as e:
-        print(f"❌ Warning: Could not create database tables: {e}")
+        print(f"❌ Database initialization error: {e}")
+        print("🔧 This might be due to database file permissions or connection issues")
     
     print("🚀 FitIntel app starting with lazy model loading for memory efficiency")
     print("📊 Models will be loaded on-demand when needed for predictions")
@@ -301,6 +334,48 @@ def predict_food_recommendations(age, weight, gender, fasting_blood_sugar, hba1c
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/health')
+def health_check():
+    """Database and system health check endpoint"""
+    try:
+        # Check database connection
+        db.engine.execute("SELECT 1")
+        
+        # Count users
+        user_count = User.query.count()
+        
+        # Get database file info (if SQLite)
+        db_info = {}
+        if 'sqlite' in app.config.get('SQLALCHEMY_DATABASE_URI', ''):
+            db_uri = app.config['SQLALCHEMY_DATABASE_URI']
+            if 'sqlite:///' in db_uri:
+                db_path = db_uri.replace('sqlite:///', '')
+                if os.path.exists(db_path):
+                    stat = os.stat(db_path)
+                    db_info = {
+                        'db_path': db_path,
+                        'db_exists': True,
+                        'db_size_bytes': stat.st_size,
+                        'db_modified': stat.st_mtime
+                    }
+                else:
+                    db_info = {'db_path': db_path, 'db_exists': False}
+        
+        return jsonify({
+            'status': 'healthy',
+            'database': 'connected',
+            'user_count': user_count,
+            'database_info': db_info,
+            'timestamp': pd.Timestamp.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'database': 'disconnected',
+            'error': str(e),
+            'timestamp': pd.Timestamp.now().isoformat()
+        }), 500
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
