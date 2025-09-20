@@ -26,23 +26,19 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'ASLDFJASDLFADS')
 # Database configuration - use environment variable for production
 database_url = os.environ.get('DATABASE_URL')
 if database_url:
-    # Production database (Render PostgreSQL) - for user data persistence
-    # Fix for Render's psycopg2 URL format
-    if database_url.startswith('postgres://'):
-        database_url = database_url.replace('postgres://', 'postgresql://', 1)
-    
+    # Production database (Render will provide this)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-    print(f"🐘 Using PostgreSQL database for persistent user storage")
 else:
-    # Use SQLite for local development only
+    # Use SQLite for deployment/development when PostgreSQL is not available
+    # Create a data directory if it doesn't exist
     data_dir = os.path.join(os.getcwd(), 'data')
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
     
+    # Use absolute path for SQLite database
     db_path = os.path.join(data_dir, 'fitintel.db')
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-    print(f"💾 Using SQLite for local development: {db_path}")
-    print("⚠️ Note: User data will not persist across deployments without PostgreSQL")
+    print(f"💾 Database path: {db_path}")
 
 # Additional database configuration for better persistence
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -267,44 +263,28 @@ def home():
 def health_check():
     """Database and system health check endpoint"""
     try:
-        # Check database connection (SQLAlchemy 2.x compatible)
-        with db.engine.connect() as conn:
-            conn.execute(db.text("SELECT 1"))
+        # Check database connection
+        db.engine.execute("SELECT 1")
         
         # Count users
         user_count = User.query.count()
         
-        # Get database type and persistence info
-        db_uri = app.config.get('SQLALCHEMY_DATABASE_URI', '')
-        if 'postgresql' in db_uri:
-            db_type = 'PostgreSQL'
-            persistent = True
-            note = 'User data persists across deployments ✅'
-            db_info = {'type': 'PostgreSQL', 'persistent': True}
-        elif 'sqlite' in db_uri:
-            db_type = 'SQLite'
-            persistent = False
-            note = 'User data will be lost on deployment restart ⚠️'
-            # Get SQLite file info
-            db_info = {}
+        # Get database file info (if SQLite)
+        db_info = {}
+        if 'sqlite' in app.config.get('SQLALCHEMY_DATABASE_URI', ''):
+            db_uri = app.config['SQLALCHEMY_DATABASE_URI']
             if 'sqlite:///' in db_uri:
                 db_path = db_uri.replace('sqlite:///', '')
                 if os.path.exists(db_path):
                     stat = os.stat(db_path)
                     db_info = {
-                        'type': 'SQLite',
                         'db_path': db_path,
                         'db_exists': True,
                         'db_size_bytes': stat.st_size,
-                        'persistent': False
+                        'db_modified': stat.st_mtime
                     }
                 else:
-                    db_info = {'db_path': db_path, 'db_exists': False, 'persistent': False}
-        else:
-            db_type = 'Unknown'
-            persistent = False
-            note = 'Database type not recognized'
-            db_info = {'type': 'Unknown', 'persistent': False}
+                    db_info = {'db_path': db_path, 'db_exists': False}
         
         return jsonify({
             'status': 'healthy',
@@ -317,13 +297,8 @@ def health_check():
                 'original_size_mb': 598.89,
                 'render_free_tier_compatible': True
             },
-            'database': {
-                'connected': True,
-                'type': db_type,
-                'persistent': persistent,
-                'user_count': user_count,
-                'note': note
-            },
+            'database': 'connected',
+            'user_count': user_count,
             'database_info': db_info,
             'timestamp': pd.Timestamp.now().isoformat()
         })
