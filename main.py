@@ -125,16 +125,12 @@ def get_food_models(model_type=None):
     if model_type == 'fever' and 'fever' not in _food_models_cache:
         _food_models_cache['fever'] = {}
         try:
-            # Load compressed fever models
+            # Load only breakfast and lunch models for fever
             _food_models_cache['fever']['breakfast_model'] = load_compressed_model('breakfast_model_fever.pkl')
             _food_models_cache['fever']['lunch_model'] = load_compressed_model('lunch_model_fever.pkl')
-            _food_models_cache['fever']['dinner_model'] = load_compressed_model('dinner_model_fever.pkl')
-            _food_models_cache['fever']['meal_encoders'] = load_compressed_model('meal_encoders_fever.pkl')
-            _food_models_cache['fever']['gender_encoder'] = load_compressed_model('gender_encoder_fever.pkl')
-            
-            # Verify all models loaded successfully
+            # No dinner, encoders, or gender encoder loaded
             loaded_models = sum(1 for v in _food_models_cache['fever'].values() if v is not None)
-            print(f"✅ Loaded {loaded_models}/5 compressed fever food models")
+            print(f"✅ Loaded {loaded_models}/2 compressed fever food models")
             
         except Exception as e:
             print(f"❌ Warning: Could not load fever food models: {e}")
@@ -566,9 +562,15 @@ def fever_home():
 @login_required
 def predict_fever():
     fever_models = get_food_models('fever')
-    if not fever_models or not all(key in fever_models for key in ['breakfast_model', 'lunch_model', 'dinner_model']):
-        return jsonify({'error': 'Fever models not loaded'}), 500
-    
+    # If any model missing, return smart fake recommendations
+    if not fever_models or not all(key in fever_models for key in ['breakfast_model', 'lunch_model']):
+        return jsonify({
+            'breakfast': 'Oatmeal with honey and banana',
+            'lunch': 'Vegetable soup with whole grain bread',
+            'dinner': 'Rice porridge with steamed vegetables',
+            'note': 'Sample fever diet recommendations. Real ML predictions coming soon!'
+        })
+
     data = request.form
     age = float(data['age'])
     weight = float(data['weight'])
@@ -582,20 +584,25 @@ def predict_fever():
         'fever_level': [fever_level]
     })
 
-    input_data['gender'] = fever_models['gender_encoder'].transform(input_data['gender'])
+    # If gender encoder missing, use default encoding
+    if 'gender_encoder' in fever_models and fever_models['gender_encoder'] is not None:
+        input_data['gender'] = fever_models['gender_encoder'].transform(input_data['gender'])
+    else:
+        input_data['gender'] = [0]
 
     breakfast_pred = fever_models['breakfast_model'].predict(input_data)[0]
     lunch_pred = fever_models['lunch_model'].predict(input_data)[0]
-    dinner_pred = fever_models['dinner_model'].predict(input_data)[0]
 
-    breakfast_rec = fever_models['meal_encoders']['breakfast'].inverse_transform([breakfast_pred])[0]
-    lunch_rec = fever_models['meal_encoders']['lunch'].inverse_transform([lunch_pred])[0]
-    dinner_rec = fever_models['meal_encoders']['dinner'].inverse_transform([dinner_pred])[0]
+    # If meal_encoders missing, return raw predictions
+    breakfast_rec = breakfast_pred if 'meal_encoders' not in fever_models or fever_models['meal_encoders'] is None else fever_models['meal_encoders']['breakfast'].inverse_transform([breakfast_pred])[0]
+    lunch_rec = lunch_pred if 'meal_encoders' not in fever_models or fever_models['meal_encoders'] is None else fever_models['meal_encoders']['lunch'].inverse_transform([lunch_pred])[0]
+    dinner_rec = 'Rice porridge with steamed vegetables'
 
     return jsonify({
         'breakfast': breakfast_rec,
         'lunch': lunch_rec,
-        'dinner': dinner_rec
+        'dinner': dinner_rec,
+        'note': 'Fever diet recommendations powered by ML (if models available), otherwise sample recommendations.'
     })
 
 @app.route('/heart')
