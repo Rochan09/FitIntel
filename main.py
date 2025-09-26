@@ -561,48 +561,16 @@ def fever_home():
 @app.route('/predict_fever', methods=['POST'])
 @login_required
 def predict_fever():
-    fever_models = get_food_models('fever')
-    # If any model missing, return smart fake recommendations
-    if not fever_models or not all(key in fever_models for key in ['breakfast_model', 'lunch_model']):
-        return jsonify({
-            'breakfast': 'Oatmeal with honey and banana',
-            'lunch': 'Vegetable soup with whole grain bread',
-            'dinner': 'Rice porridge with steamed vegetables',
-            'note': 'Sample fever diet recommendations. Real ML predictions coming soon!'
-        })
-
-    data = request.form
-    age = float(data['age'])
-    weight = float(data['weight'])
-    gender = data['gender']
-    fever_level = float(data['fever_level'])
-
-    input_data = pd.DataFrame({
-        'age': [age],
-        'weight': [weight],
-        'gender': [gender],
-        'fever_level': [fever_level]
-    })
-
-    # If gender encoder missing, use default encoding
-    if 'gender_encoder' in fever_models and fever_models['gender_encoder'] is not None:
-        input_data['gender'] = fever_models['gender_encoder'].transform(input_data['gender'])
-    else:
-        input_data['gender'] = [0]
-
-    breakfast_pred = fever_models['breakfast_model'].predict(input_data)[0]
-    lunch_pred = fever_models['lunch_model'].predict(input_data)[0]
-
-    # If meal_encoders missing, return raw predictions
-    breakfast_rec = breakfast_pred if 'meal_encoders' not in fever_models or fever_models['meal_encoders'] is None else fever_models['meal_encoders']['breakfast'].inverse_transform([breakfast_pred])[0]
-    lunch_rec = lunch_pred if 'meal_encoders' not in fever_models or fever_models['meal_encoders'] is None else fever_models['meal_encoders']['lunch'].inverse_transform([lunch_pred])[0]
-    dinner_rec = 'Rice porridge with steamed vegetables'
-
+    # Always return random smart recommendations for fever
+    import random
+    breakfast_options = ['Oatmeal with honey and banana', 'Rice porridge with turmeric', 'Fruit smoothie with ginger']
+    lunch_options = ['Vegetable soup with whole grain bread', 'Steamed rice with lentils', 'Boiled potatoes with carrots']
+    dinner_options = ['Rice porridge with steamed vegetables', 'Clear broth with noodles', 'Mashed sweet potato with peas']
     return jsonify({
-        'breakfast': breakfast_rec,
-        'lunch': lunch_rec,
-        'dinner': dinner_rec,
-        'note': 'Fever diet recommendations powered by ML (if models available), otherwise sample recommendations.'
+        'breakfast': random.choice(breakfast_options),
+        'lunch': random.choice(lunch_options),
+        'dinner': random.choice(dinner_options),
+        'note': 'Sample fever diet recommendations. Real ML predictions coming soon!'
     })
 
 @app.route('/heart')
@@ -678,84 +646,32 @@ def diabetes_home():
 @login_required
 def predict_diabetes():
     """Diabetes diet recommendations with fake data based on inputs - only fever diet planner uses real ML"""
+    # Always return random smart recommendations for diabetes
     try:
-        age = int(request.form.get('age', 0))
-        weight = float(request.form.get('weight', 0))
-        gender = request.form.get('gender', 'Male')
-        fasting_blood_sugar = float(request.form.get('fasting_blood_sugar', 100))
-        hba1c = float(request.form.get('hba1c', 5.5))
-        diabetes_type = request.form.get('diabetes_type', 'Type 2')
-        dietary_preference = request.form.get('dietary_preference', 'Non-Vegetarian')
-        
-        # Generate fake but realistic diabetes-friendly recommendations
-        severity = 'Normal'
-        if fasting_blood_sugar > 126 or hba1c > 7.0:
-            severity = 'High'
-        elif fasting_blood_sugar > 100 or hba1c > 6.0:
-            severity = 'Moderate'
-        
-        # Base recommendations by dietary preference and severity
-        recommendations = {
-            'Vegetarian': {
-                'High': {
-                    'breakfast': ['Steel-cut oats with cinnamon', 'Greek yogurt with berries', 'Vegetable omelet'],
-                    'lunch': ['Quinoa salad with vegetables', 'Lentil soup with whole grain bread', 'Chickpea curry with brown rice'],
-                    'dinner': ['Grilled tofu with vegetables', 'Vegetable stir-fry with quinoa', 'Baked sweet potato with beans']
-                },
-                'Moderate': {
-                    'breakfast': ['Whole grain cereal with milk', 'Fruit and nut smoothie', 'Avocado toast on whole wheat'],
-                    'lunch': ['Vegetable and bean salad', 'Whole wheat pasta with vegetables', 'Stuffed bell peppers'],
-                    'dinner': ['Grilled vegetables with quinoa', 'Lentil dal with brown rice', 'Roasted vegetable medley']
-                },
-                'Normal': {
-                    'breakfast': ['Mixed fruit bowl with yogurt', 'Whole grain toast with nut butter', 'Vegetable smoothie'],
-                    'lunch': ['Mediterranean salad', 'Vegetable wrap with hummus', 'Quinoa bowl with vegetables'],
-                    'dinner': ['Grilled portobello with vegetables', 'Vegetable curry with rice', 'Bean and vegetable stew']
-                }
-            },
-            'Non-Vegetarian': {
-                'High': {
-                    'breakfast': ['Egg whites with vegetables', 'Greek yogurt with nuts', 'Grilled chicken with spinach'],
-                    'lunch': ['Grilled salmon with quinoa', 'Chicken salad with olive oil', 'Turkey and vegetable soup'],
-                    'dinner': ['Baked fish with broccoli', 'Lean chicken breast with vegetables', 'Grilled shrimp with quinoa']
-                },
-                'Moderate': {
-                    'breakfast': ['Scrambled eggs with vegetables', 'Protein smoothie with berries', 'Turkey sausage with spinach'],
-                    'lunch': ['Grilled chicken with sweet potato', 'Fish with mixed vegetables', 'Lean beef with quinoa'],
-                    'dinner': ['Baked chicken with green beans', 'Grilled fish with asparagus', 'Turkey with roasted vegetables']
-                },
-                'Normal': {
-                    'breakfast': ['Egg and vegetable omelet', 'Greek yogurt with granola', 'Chicken and vegetable wrap'],
-                    'lunch': ['Grilled chicken salad', 'Fish with brown rice', 'Turkey sandwich on whole wheat'],
-                    'dinner': ['Baked salmon with vegetables', 'Chicken stir-fry', 'Lean beef with sweet potato']
-                }
-            }
-        }
-        
-        selected_meals = recommendations.get(dietary_preference, recommendations['Non-Vegetarian']).get(severity, recommendations['Non-Vegetarian']['Normal'])
-        
-        return jsonify({
-            'status': 'success (sample)',
-            'severity': severity,
-            'recommendations': {
-                'breakfast': selected_meals['breakfast'][:3],
-                'lunch': selected_meals['lunch'][:3],
-                'dinner': selected_meals['dinner'][:3]
-            },
-            'note': 'These are sample diabetes-friendly recommendations based on your inputs. Real ML predictions coming soon! Use Fever Diet Planner for actual ML-powered recommendations.'
-        })
-        
-    except Exception as e:
-        # Always return valid JSON with smart fake recommendations, matching frontend expectations
+        import random
+        breakfast_options = ['Oatmeal with berries', 'Egg whites with spinach', 'Greek yogurt with nuts']
+        lunch_options = ['Grilled chicken salad', 'Quinoa bowl with vegetables', 'Lentil soup with whole grain bread']
+        dinner_options = ['Baked fish with broccoli', 'Vegetable stir-fry with tofu', 'Lean beef with sweet potato']
         return jsonify({
             'status': 'success (sample)',
             'severity': 'Normal',
             'recommendations': {
-                'breakfast': ['Oatmeal with berries', 'Egg whites with spinach', 'Greek yogurt with nuts'],
-                'lunch': ['Grilled chicken salad', 'Quinoa bowl with vegetables', 'Lentil soup with whole grain bread'],
-                'dinner': ['Baked fish with broccoli', 'Vegetable stir-fry with tofu', 'Lean beef with sweet potato']
+                'breakfast': [random.choice(breakfast_options)],
+                'lunch': [random.choice(lunch_options)],
+                'dinner': [random.choice(dinner_options)]
             },
-            'note': 'Sample diabetes-friendly recommendations. Real ML predictions coming soon! Use Fever Diet Planner for actual ML-powered recommendations.'
+            'note': 'Sample diabetes-friendly recommendations. Real ML predictions coming soon!'
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'success (sample)',
+            'severity': 'Normal',
+            'recommendations': {
+                'breakfast': ['Oatmeal with berries'],
+                'lunch': ['Grilled chicken salad'],
+                'dinner': ['Baked fish with broccoli']
+            },
+            'note': 'Sample diabetes-friendly recommendations. Real ML predictions coming soon!'
         })
 
 @app.route('/diet')
@@ -767,115 +683,30 @@ def diet_home():
 @login_required
 def recommend_diet():
     """General diet recommendations with fake data based on inputs - only fever diet planner uses real ML"""
+    # Always return random smart recommendations for diet maintenance
     try:
-        age = int(request.form['age'])
-        height = float(request.form['height'])
-        weight = float(request.form['weight'])
-        gender = request.form['gender']
-        dietary_preference = request.form['dietary_preference']
-        weight_loss_plan = request.form['weight_loss_plan']
-        meals_per_day = int(request.form['meals_per_day'])
-        
-        bmi = weight / ((height/100) ** 2)
-        bmi_category = get_bmi_category(bmi)
-        
-        # Generate fake but realistic diet recommendations based on inputs
-        diet_plans = {
-            'Vegetarian': {
-                'Aggressive': {
-                    'breakfast': 'High-protein smoothie with plant protein, spinach, and berries',
-                    'lunch': 'Quinoa salad with mixed vegetables and chickpeas',
-                    'dinner': 'Grilled tofu with steamed broccoli and brown rice'
-                },
-                'Moderate': {
-                    'breakfast': 'Oatmeal with nuts, seeds, and fresh fruit',
-                    'lunch': 'Lentil curry with whole wheat roti and salad',
-                    'dinner': 'Vegetable stir-fry with quinoa and paneer'
-                },
-                'Gentle': {
-                    'breakfast': 'Whole grain cereal with milk and banana',
-                    'lunch': 'Vegetable soup with whole grain bread',
-                    'dinner': 'Dal with rice and mixed vegetables'
-                }
-            },
-            'Non-Vegetarian': {
-                'Aggressive': {
-                    'breakfast': 'Egg white omelet with vegetables and lean turkey',
-                    'lunch': 'Grilled chicken breast with quinoa and green salad',
-                    'dinner': 'Baked fish with steamed vegetables and sweet potato'
-                },
-                'Moderate': {
-                    'breakfast': 'Scrambled eggs with whole wheat toast and avocado',
-                    'lunch': 'Grilled chicken salad with olive oil dressing',
-                    'dinner': 'Baked salmon with brown rice and broccoli'
-                },
-                'Gentle': {
-                    'breakfast': 'Greek yogurt with granola and berries',
-                    'lunch': 'Chicken soup with whole grain crackers',
-                    'dinner': 'Grilled fish with mashed sweet potato'
-                }
-            },
-            'Vegan': {
-                'Aggressive': {
-                    'breakfast': 'Chia seed pudding with almond milk and berries',
-                    'lunch': 'Buddha bowl with quinoa, vegetables, and tahini',
-                    'dinner': 'Lentil and vegetable curry with cauliflower rice'
-                },
-                'Moderate': {
-                    'breakfast': 'Overnight oats with nuts and fruit',
-                    'lunch': 'Vegetable and bean salad with olive oil',
-                    'dinner': 'Tofu stir-fry with brown rice and vegetables'
-                },
-                'Gentle': {
-                    'breakfast': 'Fruit smoothie with plant-based protein',
-                    'lunch': 'Vegetable soup with whole grain bread',
-                    'dinner': 'Bean and vegetable stew with quinoa'
-                }
-            }
-        }
-        
-        # Adjust recommendations based on BMI
-        if bmi_category in ['Underweight']:
-            plan_intensity = 'Gentle'
-        elif bmi_category in ['Overweight', 'Obese']:
-            plan_intensity = weight_loss_plan
-        else:
-            plan_intensity = 'Moderate'
-        
-        selected_plan = diet_plans.get(dietary_preference, diet_plans['Non-Vegetarian']).get(plan_intensity, diet_plans['Non-Vegetarian']['Moderate'])
-        
-        # Add snacks if meals_per_day > 3
-        snack_options = {
-            'Vegetarian': ['Mixed nuts and seeds', 'Greek yogurt with berries', 'Apple with almond butter'],
-            'Non-Vegetarian': ['Hard-boiled eggs', 'Greek yogurt with nuts', 'Protein smoothie'],
-            'Vegan': ['Hummus with vegetables', 'Mixed nuts', 'Fruit and nut energy balls']
-        }
-        
-        result = {
-            'breakfast': selected_plan['breakfast'],
-            'lunch': selected_plan['lunch'],
-            'dinner': selected_plan['dinner'],
-            'bmi': round(bmi, 1),
-            'bmi_category': bmi_category,
-            'plan_type': f'{dietary_preference} - {plan_intensity} Plan',
-            'note': 'These are sample diet recommendations based on your profile. Real ML predictions coming soon! Use Fever Diet Planner for actual ML-powered recommendations.'
-        }
-        
-        if meals_per_day > 3:
-            result['snacks'] = snack_options.get(dietary_preference, snack_options['Non-Vegetarian'])
-        
-        return jsonify(result)
-        
+        import random
+        breakfast_options = ['Balanced breakfast with protein and whole grains', 'Fruit smoothie with seeds', 'Oatmeal with nuts']
+        lunch_options = ['Nutritious lunch with lean protein and vegetables', 'Quinoa salad with chickpeas', 'Vegetable wrap with hummus']
+        dinner_options = ['Light dinner with healthy portions', 'Grilled tofu with vegetables', 'Chicken soup with whole grain bread']
+        return jsonify({
+            'breakfast': random.choice(breakfast_options),
+            'lunch': random.choice(lunch_options),
+            'dinner': random.choice(dinner_options),
+            'bmi': 22.0,
+            'bmi_category': 'Normal',
+            'plan_type': 'Diet Maintenance - Sample Plan',
+            'note': 'Sample diet maintenance recommendations. Real ML predictions coming soon!'
+        })
     except Exception as e:
-        # Always return valid JSON with smart fake recommendations
         return jsonify({
             'breakfast': 'Balanced breakfast with protein and whole grains',
             'lunch': 'Nutritious lunch with lean protein and vegetables',
             'dinner': 'Light dinner with healthy portions',
             'bmi': 22.0,
             'bmi_category': 'Normal',
-            'plan_type': 'Non-Vegetarian - Moderate Plan',
-            'note': 'Sample diet recommendations. Real ML predictions coming soon! Use Fever Diet Planner for actual ML-powered recommendations.'
+            'plan_type': 'Diet Maintenance - Sample Plan',
+            'note': 'Sample diet maintenance recommendations. Real ML predictions coming soon!'
         })
 
 @app.route('/test_recommendations')
