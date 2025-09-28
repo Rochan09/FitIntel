@@ -1,9 +1,18 @@
-from flask_sqlalchemy import SQLAlchemy
+from config import mongo_db
 
-db=SQLAlchemy()
+class User:
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password = password
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), unique=True, nullable= False)
-    email = db.Column(db.String(100), unique=True, nullable= False)
-    password = db.Column(db.String(60), nullable= False)
+    def save(self):
+        mongo_db.users.insert_one({
+            "username": self.username,
+            "email": self.email,
+            "password": self.password
+        })
+
+    @staticmethod
+    def find_by_username(username):
+        return mongo_db.users.find_one({"username": username})

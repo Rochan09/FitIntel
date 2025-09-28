@@ -17,6 +17,20 @@ unused_models/
 unused_models/*.pkl
 unused_models/*.txt
 
+# Ignore instance folder
+instance/
+
+# Ignore backup and test files
+main_full_backup.py
+test_compressed_models.py
+
+# Ignore unused templates
+templates/unused_templates/
+
+# Ignore model files if not needed for deployment
+models/
+models_compressed/
+
 # Database files (but keep data directory structure)
 data/*.db
 data/*.sqlite

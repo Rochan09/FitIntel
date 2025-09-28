@@ -8,7 +8,7 @@ import random
 import gc
 from flask import Flask, render_template, flash, redirect, url_for, session, request, jsonify
 from forms import RegisterForm, LoginForm
-from models import db, User
+from models import User
 from flask_bcrypt import Bcrypt
 from functools import wraps
 import pandas as pd
@@ -23,34 +23,7 @@ import warnings
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'ASLDFJASDLFADS')
 
-# Database configuration - use environment variable for production
-database_url = os.environ.get('DATABASE_URL')
-if database_url:
-    # Production database (Render will provide this)
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-else:
-    # Use SQLite for deployment/development when PostgreSQL is not available
-    # Create a data directory if it doesn't exist
-    data_dir = os.path.join(os.getcwd(), 'data')
-    if not os.path.exists(data_dir):
-        os.makedirs(data_dir)
-    
-    # Use absolute path for SQLite database
-    db_path = os.path.join(data_dir, 'fitintel.db')
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-    print(f"💾 Database path: {db_path}")
-
-# Additional database configuration for better persistence
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    'pool_timeout': 20,
-    'pool_recycle': -1,
-    'pool_pre_ping': True
-}
-
-# Initialize extensions
 bcrypt = Bcrypt(app)
-db.init_app(app)
 
 # Suppress warnings
 warnings.filterwarnings('ignore')
@@ -140,37 +113,10 @@ def get_food_models(model_type=None):
     
     return _food_models_cache.get(model_type, {})
 
-# Load all models at startup
-with app.app_context():
-    # Try to create database tables with better error handling
-    try:
-        # First, ensure we can connect to the database (SQLAlchemy 2.x compatible)
-        with db.engine.connect() as conn:
-            conn.execute(db.text("SELECT 1"))
-        print("✅ Database connection successful")
-        
-        # Create all tables
-        db.create_all()
-        print("✅ Database tables created successfully")
-        
-        # Verify tables exist by checking User table
-        from sqlalchemy import inspect
-        inspector = inspect(db.engine)
-        tables = inspector.get_table_names()
-        print(f"📊 Found {len(tables)} database tables: {tables}")
-        
-        # Check if we have any existing users
-        user_count = User.query.count()
-        print(f"👥 Current user count: {user_count}")
-        
-    except Exception as e:
-        print(f"❌ Database initialization error: {e}")
-        print("🔧 This might be due to database file permissions or connection issues")
-    
-    print("🚀 FitIntel app starting - FULL FEATURED with SMART RECOMMENDATIONS")
-    print("🌡️ Fever Diet Planner: REAL ML-powered recommendations")
-    print("🎯 Exercise, Heart, Diabetes, Diet: Smart fake recommendations based on user inputs")
-    print("📦 Using compressed models (6.85MB total) for Render free tier")
+print(" FitIntel app starting - FULL FEATURED with SMART RECOMMENDATIONS")
+print("🌡️ Fever Diet Planner: REAL ML-powered recommendations")
+print("🎯 Exercise, Heart, Diabetes, Diet: Smart fake recommendations based on user inputs")
+print("📦 Using compressed models (6.85MB total) for Render free tier")
 
 # ==================== Helper Functions ====================
 def get_bmi_category(bmi):
@@ -257,31 +203,10 @@ def home():
 
 @app.route('/health')
 def health_check():
-    """Database and system health check endpoint"""
+    """Database and system health check endpoint (MongoDB)"""
     try:
-        # Check database connection
-        db.engine.execute("SELECT 1")
-        
-        # Count users
-        user_count = User.query.count()
-        
-        # Get database file info (if SQLite)
-        db_info = {}
-        if 'sqlite' in app.config.get('SQLALCHEMY_DATABASE_URI', ''):
-            db_uri = app.config['SQLALCHEMY_DATABASE_URI']
-            if 'sqlite:///' in db_uri:
-                db_path = db_uri.replace('sqlite:///', '')
-                if os.path.exists(db_path):
-                    stat = os.stat(db_path)
-                    db_info = {
-                        'db_path': db_path,
-                        'db_exists': True,
-                        'db_size_bytes': stat.st_size,
-                        'db_modified': stat.st_mtime
-                    }
-                else:
-                    db_info = {'db_path': db_path, 'db_exists': False}
-        
+        from config import mongo_db
+        user_count = mongo_db.users.count_documents({})
         return jsonify({
             'status': 'healthy',
             'mode': 'full-featured-with-smart-recommendations',
@@ -295,7 +220,6 @@ def health_check():
             },
             'database': 'connected',
             'user_count': user_count,
-            'database_info': db_info,
             'timestamp': pd.Timestamp.now().isoformat()
         })
     except Exception as e:
@@ -312,10 +236,11 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            session['user_id'] = user.id
-            session['username'] = user.username
+        from config import mongo_db
+        user = mongo_db.users.find_one({"email": form.email.data})
+        if user and bcrypt.check_password_hash(user['password'], form.password.data):
+            session['user_id'] = str(user['_id'])
+            session['username'] = user['username']
             flash('You have been logged in!', 'success')
             return redirect(url_for('home'))
         else:
@@ -328,14 +253,14 @@ def register():
         return redirect(url_for('home'))
     form = RegisterForm()
     if form.validate_on_submit():
+        from config import mongo_db
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(
             username=form.username.data,
             email=form.email.data,
             password=hashed_password,
         )
-        db.session.add(user)
-        db.session.commit()
+        user.save()
         flash('Your account has been created!', 'success')
         return redirect(url_for('login'))
     return render_template("register.html", form=form)
