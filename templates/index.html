@@ -616,6 +616,21 @@
     </style>
 </head>
 <body>
+
+    <!-- Loading Animation -->
+    <div id="loader" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;">
+            <div style="margin-bottom:20px;">
+                <svg width="80" height="80" viewBox="0 0 50 50">
+                  <circle cx="25" cy="25" r="20" stroke="#4CAF50" stroke-width="5" fill="none" stroke-linecap="round">
+                    <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/>
+                  </circle>
+                </svg>
+            </div>
+            <div style="font-size:1.3rem;color:#388E3C;font-weight:600;">Loading FitIntel...</div>
+        </div>
+    </div>
+
     <!-- Enhanced Navbar -->
     {% include 'header.html' %}
 
@@ -628,6 +643,11 @@
     {% include 'contact_section.html' %}
 
     <script>
+        // Hide loader when page is fully loaded
+        window.addEventListener('load', function() {
+            document.getElementById('loader').style.display = 'none';
+        });
+
         // Navbar scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');

@@ -18,24 +18,27 @@ FitIntel is an AI-powered health and fitness web application designed to provide
 3. **Exercise Planner:** Get exercise suggestions based on your profile.
 4. **Recommendations:** All plans are generated using AI models trained on health and nutrition data.
 
+
 ## Technologies Used
 
 - Python (Flask)
+- MongoDB Atlas (cloud database, using PyMongo)
 - HTML, CSS (Tailwind, custom styles)
 - JavaScript (Axios for API calls)
 - Scikit-learn, joblib, pickle (for ML models)
 - Responsive design for all devices
 
 
+
 ## Getting Started
 
 1. Clone the repository.
-2. Install dependencies from `requirements.txt`.
-3. **Important:** For compatibility with older models, install scikit-learn version 1.6.1:
+2. Install dependencies from `requirements.txt` (includes `pymongo` for MongoDB):
    ```
-   pip install --upgrade scikit-learn==1.6.1
+   pip install -r requirements.txt
    ```
-4. Place all required model files in the `models/` directory.
+3. Set your MongoDB Atlas connection string in `config.py` (default is provided for FitIntel cluster).
+4. Place all required model files in the `models/` directory (if using ML features).
 5. Run the Flask app:
    ```
    python app.py
@@ -47,9 +50,12 @@ FitIntel is an AI-powered health and fitness web application designed to provide
    to check if all models are loaded correctly before starting the app.
 6. Open your browser at `http://127.0.0.1:5000/`.
 
+
 ## Project Structure
 
 - `app.py`, `main.py`: Backend logic and routes
+- `config.py`: MongoDB Atlas connection setup
+- `models.py`: User model and database logic (now using MongoDB)
 - `templates/`: HTML templates for all pages
 - `static/`: Images and CSS
 - `models/`: Pre-trained ML models
