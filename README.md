@@ -51,6 +51,7 @@ FitIntel is an AI-powered health and fitness web application designed to provide
 6. Open your browser at `http://127.0.0.1:5000/`.
 
 
+
 ## Project Structure
 
 - `app.py`, `main.py`: Backend logic and routes
@@ -58,6 +59,17 @@ FitIntel is an AI-powered health and fitness web application designed to provide
 - `models.py`: User model and database logic (now using MongoDB)
 - `templates/`: HTML templates for all pages
 - `static/`: Images and CSS
+
+## Screenshots
+
+### Home Page
+![Home Page](public/home.png)
+
+### Food Recommendations
+![Food Page](public/food.png)
+
+### Exercise Planner
+![Exercise Page](public/exercise.png)
 - `models/`: Pre-trained ML models
 
 ## Why FitIntel?
