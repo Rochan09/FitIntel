@@ -27,7 +27,7 @@
       min-height: 100vh;
     }
 
-    .main-content { padding: 3rem 0; }
+    .main-content { padding: 4rem 1rem; }
     .section-title {
       text-align: center;
       margin-bottom: 2rem;
@@ -151,6 +151,13 @@
       transform: translateY(-3px);
       background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
       box-shadow: 0 8px 25px rgba(33,150,243,0.4);
+    }
+
+    /* Logo Animation */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
 
     @media (max-width: 768px) {

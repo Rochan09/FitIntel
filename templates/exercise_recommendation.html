@@ -18,12 +18,7 @@
       --shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
     body {
       background: linear-gradient(135deg, #eef2f3, #d9e4ec);
@@ -200,6 +195,13 @@
     .flexibility-img { background-image: url('https://images.unsplash.com/photo-1545205597-3d9d02c29597'); }
 
     /* Responsive */
+    /* Logo Animation */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
     @media (max-width: 768px) {
       .section-title {
         font-size: 2rem;

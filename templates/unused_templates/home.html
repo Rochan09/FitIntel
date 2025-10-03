@@ -712,55 +712,13 @@
 </head>
 <body>
     {% include 'header.html' %}
+    {% include 'home_section.html' %}
 
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Unlock Your Health Potential</h1>
-                <p>Experience personalized food and exercise recommendations tailored to your unique goals and lifestyle.</p>
-                <div class="btn-group">
-                    <a href="#modules" class="btn btn-secondary">Explore Plans</a>
-                    <a href="#" class="btn">Get Started</a>
-                </div>
-            </div>
-        </div>
-    </section>
+    {% include 'food_section.html' %}
+    {% include 'exercise_section.html' %}
 
-    <section id="modules" class="section">
-        <div class="container">
-            <h2 class="section-title">Choose Your Path</h2>
-            <p class="section-subtitle">Select from our personalized recommendation modules designed to help you achieve your health and fitness goals.</p>
-            <div class="modules">
-                <a href="/food_recommendation" class="module-card" style="text-decoration: none;">
-                    <div class="module-img food-img">
-                        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd" alt="Healthy Food" style="width:100%;height:100%;object-fit:cover;border-radius:16px 16px 0 0;">
-                        <div class="module-overlay"></div>
-                    </div>
-                    <div class="module-content">
-                        <h3 class="module-title">Food Recommendation</h3>
-                        <p class="module-description">Discover nutrition plans tailored to your health conditions, dietary restrictions, and fitness goals. Our AI-powered system analyzes your unique needs to create balanced meal plans.</p>
-                        <div class="module-action">
-                            <span class="module-btn">Get Your Plan</span>
-                        </div>
-                    </div>
-                </a>
+    {% include 'about_section.html' %}
 
-                <a href="/exercise_recommendation" class="module-card" style="text-decoration: none;">
-                    <div class="module-img exercise-img">
-                        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438" alt="Exercise" style="width:100%;height:100%;object-fit:cover;border-radius:16px 16px 0 0;">
-                        <div class="module-overlay"></div>
-                    </div>
-                    <div class="module-content">
-                        <h3 class="module-title">Exercise Recommendation</h3>
-                        <p class="module-description">Find the perfect workout routines for your fitness journey, customized to your fitness level, available equipment, and personal goals. Get started with effective exercises today.</p>
-                        <div class="module-action">
-                            <span class="module-btn">Find Workouts</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
 
     <footer class="footer">
         <div class="container">

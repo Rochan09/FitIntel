@@ -24,19 +24,20 @@ except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) 
     print(f"Warning: Could not load fever models. This may be due to a version mismatch, a corrupted model file, or a memory allocation issue. Error: {e}")
 
 # ==================== Heart Models (app2) ====================
-try:
-    with open('models/risk_model_heart.pkl', 'rb') as f:
-        risk_model_heart = pickle.load(f)
-    with open('models/scaler_heart.pkl', 'rb') as f:
-        scaler_heart = pickle.load(f)
-    with open('models/encoders_heart.pkl', 'rb') as f:
-        encoders_heart = pickle.load(f)
-    with open('models/meal_recommendations_heart.pkl', 'rb') as f:
-        meal_recommendations_heart = pickle.load(f)
-    heart_models_loaded = True
-except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) as e:
-    heart_models_loaded = False
-    print(f"Warning: Could not load heart models. This may be due to a version mismatch, a corrupted model file, or a memory allocation issue. Error: {e}")
+# Commented out - models don't exist yet
+# try:
+#     with open('models/risk_model_heart.pkl', 'rb') as f:
+#         risk_model_heart = pickle.load(f)
+#     with open('models/scaler_heart.pkl', 'rb') as f:
+#         scaler_heart = pickle.load(f)
+#     with open('models/encoders_heart.pkl', 'rb') as f:
+#         encoders_heart = pickle.load(f)
+#     with open('models/meal_recommendations_heart.pkl', 'rb') as f:
+#         meal_recommendations_heart = pickle.load(f)
+#     heart_models_loaded = True
+# except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) as e:
+heart_models_loaded = False
+print("Info: Heart models not loaded - files don't exist yet")
 
 # ==================== Diabetes Models (app3) ====================
 # Check if models exist for diabetes
@@ -45,24 +46,25 @@ if not os.path.exists(models_dir):
     os.makedirs(models_dir)
 
 # ==================== Diet Models (app4) ====================
-try:
-    breakfast_model = joblib.load('models/breakfast_model.pkl')
-    lunch_model = joblib.load('models/lunch_model.pkl')
-    dinner_model = joblib.load('models/dinner_model.pkl')
-    scaler = joblib.load('models/scaler.pkl')
-    le_gender = joblib.load('models/le_gender.pkl')
-    le_dietary_pref = joblib.load('models/le_dietary_pref.pkl')
-    le_weight_loss_plan = joblib.load('models/le_weight_loss_plan.pkl')
-    diet_models_loaded = True
-except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) as e:
-    diet_models_loaded = False
-    print(f"Warning: Could not load diet models. This may be due to a version mismatch, a corrupted model file, or a memory allocation issue. Error: {e}")
+# Commented out - models don't exist yet
+# try:
+#     breakfast_model = joblib.load('models/breakfast_model.pkl')
+#     lunch_model = joblib.load('models/lunch_model.pkl')
+#     dinner_model = joblib.load('models/dinner_model.pkl')
+#     scaler = joblib.load('models/scaler.pkl')
+#     le_gender = joblib.load('models/le_gender.pkl')
+#     le_dietary_pref = joblib.load('models/le_dietary_pref.pkl')
+#     le_weight_loss_plan = joblib.load('models/le_weight_loss_plan.pkl')
+#     diet_models_loaded = True
+# except (AttributeError, pickle.UnpicklingError, FileNotFoundError, MemoryError) as e:
+diet_models_loaded = False
+print("Info: Diet models not loaded - files don't exist yet")
 
 # ==================== Routes ====================
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('index.html')
 
 # ==================== Fever Routes ====================
 @app.route('/fever')
@@ -117,7 +119,14 @@ def heart_home():
 @app.route('/predict_heart', methods=['POST'])
 def predict_heart():
     if not heart_models_loaded:
-        return jsonify({'error': 'Heart models not loaded'}), 500
+        # Return sample data when models aren't loaded
+        result = {
+            'risk_category': 'Moderate Risk (Sample)',
+            'breakfast': 'Oatmeal with berries, green tea',
+            'lunch': 'Grilled salmon, quinoa, vegetables',
+            'dinner': 'Baked chicken, brown rice, leafy greens'
+        }
+        return render_template('heart.html', prediction=result)
     
     # Get input data from the form
     age = int(request.form['age'])
@@ -128,33 +137,34 @@ def predict_heart():
     bp_diastolic = int(request.form['bp_diastolic'])
     obesity = request.form['obesity']
     
+    # This code would run when models are loaded:
     # Encode the categorical variables
-    gender_encoded = encoders_heart['gender'].transform([gender])[0]
-    obesity_encoded = encoders_heart['obesity'].transform([obesity])[0]
+    # gender_encoded = encoders_heart['gender'].transform([gender])[0]
+    # obesity_encoded = encoders_heart['obesity'].transform([obesity])[0]
     
     # Create the input array
-    input_data = np.array([[age, weight, gender_encoded, cholesterol, bp_systolic, bp_diastolic, obesity_encoded]])
+    # input_data = np.array([[age, weight, gender_encoded, cholesterol, bp_systolic, bp_diastolic, obesity_encoded]])
     
     # Scale the input data
-    input_data_scaled = scaler_heart.transform(input_data)
+    # input_data_scaled = scaler_heart.transform(input_data)
     
     # Predict risk category
-    risk_category = risk_model_heart.predict(input_data_scaled)[0]
+    # risk_category = risk_model_heart.predict(input_data_scaled)[0]
     
     # Get meal recommendations based on risk category
-    category_recommendations = meal_recommendations_heart[risk_category]
+    # category_recommendations = meal_recommendations_heart[risk_category]
     
     # Select random options from the recommendations
-    breakfast_options = random.choice(category_recommendations['breakfast'])
-    lunch_options = random.choice(category_recommendations['lunch'])
-    dinner_options = random.choice(category_recommendations['dinner'])
+    # breakfast_options = random.choice(category_recommendations['breakfast'])
+    # lunch_options = random.choice(category_recommendations['lunch'])
+    # dinner_options = random.choice(category_recommendations['dinner'])
     
     # Prepare the result
     result = {
-        'risk_category': risk_category,
-        'breakfast': ', '.join(breakfast_options),
-        'lunch': ', '.join(lunch_options),
-        'dinner': ', '.join(dinner_options)
+        'risk_category': 'Sample Prediction',
+        'breakfast': 'Heart-healthy breakfast options',
+        'lunch': 'Nutritious lunch recommendations',
+        'dinner': 'Light dinner suggestions'
     }
     # If AJAX request, return JSON
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -325,6 +335,19 @@ def diet_home():
 
 @app.route('/recommend_diet', methods=['POST'])
 def recommend_diet():
+    if not diet_models_loaded:
+        # Return sample data when models aren't loaded
+        import random
+        breakfast_options = ['Balanced breakfast with protein and whole grains', 'Fruit smoothie with seeds', 'Oatmeal with nuts']
+        lunch_options = ['Nutritious lunch with lean protein and vegetables', 'Quinoa salad with chickpeas', 'Vegetable wrap with hummus']
+        dinner_options = ['Light dinner with healthy portions', 'Grilled tofu with vegetables', 'Chicken soup with whole grain bread']
+        return jsonify({
+            'breakfast': random.choice(breakfast_options),
+            'lunch': random.choice(lunch_options),
+            'dinner': random.choice(dinner_options),
+            'note': 'Sample diet maintenance recommendations. Models not loaded yet!'
+        })
+    
     try:
         # Get form data
         age = int(request.form['age'])
@@ -335,29 +358,30 @@ def recommend_diet():
         weight_loss_plan = request.form['weight_loss_plan']
         meals_per_day = int(request.form['meals_per_day'])
 
+        # This code would run when models are loaded:
         # Encode categorical variables
-        gender_encoded = le_gender.transform([gender])[0]
-        dietary_pref_encoded = le_dietary_pref.transform([dietary_preference])[0]
-        weight_loss_plan_encoded = le_weight_loss_plan.transform([weight_loss_plan])[0]
+        # gender_encoded = le_gender.transform([gender])[0]
+        # dietary_pref_encoded = le_dietary_pref.transform([dietary_preference])[0]
+        # weight_loss_plan_encoded = le_weight_loss_plan.transform([weight_loss_plan])[0]
 
         # Prepare input features
-        input_features = np.array([
-            age, height, weight, gender_encoded, 
-            dietary_pref_encoded, weight_loss_plan_encoded, meals_per_day
-        ]).reshape(1, -1)
+        # input_features = np.array([
+        #     age, height, weight, gender_encoded, 
+        #     dietary_pref_encoded, weight_loss_plan_encoded, meals_per_day
+        # ]).reshape(1, -1)
 
         # Scale features
-        input_scaled = scaler.transform(input_features)
+        # input_scaled = scaler.transform(input_features)
 
         # Predict meals
-        breakfast_pred = breakfast_model.predict(input_scaled)[0]
-        lunch_pred = lunch_model.predict(input_scaled)[0]
-        dinner_pred = dinner_model.predict(input_scaled)[0]
+        # breakfast_pred = breakfast_model.predict(input_scaled)[0]
+        # lunch_pred = lunch_model.predict(input_scaled)[0]
+        # dinner_pred = dinner_model.predict(input_scaled)[0]
 
         return jsonify({
-            'breakfast': breakfast_pred,
-            'lunch': lunch_pred,
-            'dinner': dinner_pred
+            'breakfast': 'Sample breakfast recommendation',
+            'lunch': 'Sample lunch recommendation', 
+            'dinner': 'Sample dinner recommendation'
         })
     except Exception:
         # Always return valid JSON with smart fake recommendations

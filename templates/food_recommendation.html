@@ -17,22 +17,20 @@
       --shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
     body {
       background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
       color: var(--dark);
       line-height: 1.6;
+      min-height: 100vh;
     }
 
     /* Main Section */
     .main-content {
       padding: 4rem 1rem;
+      max-width: 1200px;
+      margin: auto;
     }
 
     .section-title {
@@ -197,6 +195,13 @@
     }
 
     /* Responsive */
+    /* Logo Animation */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
     @media (max-width: 768px) {
       .section-title {
         font-size: 2rem;

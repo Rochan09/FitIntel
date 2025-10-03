@@ -27,43 +27,6 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        .register-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
-            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
-        }
-
-        .username {
-            font-weight: 600;
-            color: var(--primary);
-            margin-right: 1rem;
-        }
-
-        .logout-btn {
-            padding: 0.5rem 1.2rem;
-            background: #f44336;
-            color: white;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .logout-btn:hover {
-            background: #d32f2f;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
-        }
-
         /* Auth Container */
         .auth-container {
             display: flex;
@@ -148,69 +111,6 @@
             outline: none;
         }
 
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 0.5rem 0;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: #555;
-            cursor: pointer;
-        }
-
-        .remember-me input {
-            display: none;
-        }
-
-        .checkmark {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .remember-me input:checked ~ .checkmark {
-            background: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .checkmark::after {
-            content: "";
-            position: absolute;
-            display: none;
-            left: 5px;
-            top: 2px;
-            width: 4px;
-            height: 8px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-        }
-
-        .remember-me input:checked ~ .checkmark::after {
-            display: block;
-        }
-
-        .forgot-password {
-            color: var(--secondary);
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-
         .submit-btn {
             display: inline-flex;
             align-items: center;
@@ -287,101 +187,7 @@
             border: 1px solid rgba(211, 47, 47, 0.3);
         }
 
-        /* Footer */
-        .footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 4rem 0 0;
-            width: 100%;
-        }
 
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .footer-column {
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-title {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.8rem;
-            font-weight: 600;
-        }
-
-        .footer-title::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background: var(--gradient);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-link {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-link a {
-            color: #bbb;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-
-        .footer-link a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-
-        .footer-link i {
-            margin-right: 8px;
-            font-size: 0.9rem;
-            color: var(--primary);
-        }
-
-        .social-icons {
-            display: flex;
-            margin-top: 1.5rem;
-            gap: 0.8rem;
-        }
-
-        .social-icon {
-            color: white;
-            background-color: rgba(255, 255, 255, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .social-icon:hover {
-            background: var(--gradient);
-            transform: translateY(-3px);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding: 1.5rem 0;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
-            color: #aaa;
-        }
 
         /* Animations */
         @keyframes pulse {
@@ -392,42 +198,8 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                padding: 1rem 0;
-            }
-            
-            .logo {
-                margin-bottom: 1rem;
-            }
-            
-            .nav-menu {
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-                margin: 1rem 0;
-            }
-            
-            .nav-item {
-                margin: 0.3rem;
-                font-size: 0.9rem;
-                padding: 0.5rem 1rem;
-            }
-
-            .auth-buttons {
-                margin: 1rem 0 0;
-                width: 100%;
-                justify-content: center;
-            }
-
-            .user-info {
-                margin: 1rem 0 0;
-                width: 100%;
-                justify-content: center;
-            }
-            
             .auth-container {
-                padding: 8rem 1rem 4rem;
+                padding: 2rem 1rem;
             }
             
             .auth-card {
@@ -549,26 +321,8 @@
         </div>
     </div>
 
-    {% include 'contact_section.html' %}
 
     <script>
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Set active nav item
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
         // Password visibility toggles for registration
         const toggleRegisterPassword = document.getElementById('toggleRegisterPassword');
         const registerPasswordInput = document.getElementById('register-password');
